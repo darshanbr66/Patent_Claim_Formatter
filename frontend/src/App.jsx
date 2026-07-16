@@ -5,6 +5,7 @@ import AppLayout from "./layouts/AppLayout";
 import HomePage from "./pages/HomePage";
 import ProcessingPage from "./pages/ProcessingPage";
 import ViewerPage from "./pages/ViewerPage";
+import ParserTestPage from "./pages/ParserTestPage";
 
 export default function App() {
   return (
@@ -24,6 +25,12 @@ export default function App() {
           <Route
             path="/viewer"
             element={<ViewerPage />}
+          />
+
+          {/* Temporary debugging route */}
+          <Route
+            path="/parser-test"
+            element={<ParserTestPage />}
           />
         </Routes>
       </AppLayout>
