@@ -6,7 +6,13 @@ import {
   extractDrawings,
   extractRelationships,
   extractClassifications,
+  extractAbstract,
 } from "../patent";
+
+import {
+  getPatentRoot,
+  getBibliographic,
+} from "./parserHelpers";
 
 /**
  * Detect the patent document type.
@@ -24,43 +30,46 @@ function detectPatentType(parsedXml) {
 }
 
 /**
- * Return the USPTO patent root node.
- */
-function getPatentRoot(parsedXml) {
-  if (parsedXml["us-patent-grant"]) {
-    return parsedXml["us-patent-grant"];
-  }
-
-  if (parsedXml["us-patent-application"]) {
-    return parsedXml["us-patent-application"];
-  }
-
-  throw new Error("Patent root node not found.");
-}
-
-/**
  * Normalize parsed USPTO XML into our internal Patent model.
  */
 export function extractPatent(parsedXml) {
   const patentType = detectPatentType(parsedXml);
+
   const root = getPatentRoot(parsedXml);
 
+  const bibliographic = getBibliographic(root);
+
   return {
-    document: extractDocument(root, patentType),
+    document: extractDocument(
+      bibliographic,
+      patentType
+    ),
 
-    parties: extractParties(root),
+    parties: extractParties(
+      bibliographic
+    ),
 
-    classifications: extractClassifications(root),
+    classifications: extractClassifications(
+      bibliographic
+    ),
 
-    relationships: extractRelationships(root),
+    relationships: extractRelationships(
+      bibliographic
+    ),
 
-    abstract: null,
+    abstract: extractAbstract(root),
 
-    description: extractDescription(root),
+    description: extractDescription(
+      root
+    ),
 
-    drawings: extractDrawings(root),
+    drawings: extractDrawings(
+      root
+    ),
 
-    claims: extractClaims(root),
+    claims: extractClaims(
+      root
+    ),
 
     raw: parsedXml,
   };

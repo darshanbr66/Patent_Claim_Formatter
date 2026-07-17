@@ -1,38 +1,18 @@
-/**
- * Ensures a value is always returned as an array.
- */
-function toArray(value) {
-  if (!value) return [];
-
-  return Array.isArray(value) ? value : [value];
-}
-
-/**
- * Safely reads a nested property.
- */
-function get(object, path, defaultValue = null) {
-  const value = path
-    .split(".")
-    .reduce((current, key) => current?.[key], object);
-
-  return value ?? defaultValue;
-}
+import {
+  get,
+  toArray,
+} from "../parser/parserHelpers";
 
 /**
  * Creates a normalized person object.
  */
-function createPerson(node) {
-  if (!node) return null;
+function createPerson(addressbook) {
+  if (!addressbook) {
+    return null;
+  }
 
-  const firstName =
-    node["first-name"] ??
-    node.firstName ??
-    null;
-
-  const lastName =
-    node["last-name"] ??
-    node.lastName ??
-    null;
+  const firstName = addressbook["first-name"] ?? null;
+  const lastName = addressbook["last-name"] ?? null;
 
   return {
     firstName,
@@ -40,127 +20,112 @@ function createPerson(node) {
     fullName: [firstName, lastName]
       .filter(Boolean)
       .join(" "),
+    organization: addressbook.orgname ?? null,
+    address: addressbook.address ?? null,
   };
 }
 
 /**
  * Creates a normalized organization object.
  */
-function createOrganization(node) {
-  if (!node) return null;
+function createOrganization(addressbook) {
+  if (!addressbook) {
+    return null;
+  }
 
   return {
-    name:
-      node.orgname ??
-      node.name ??
-      null,
+    name: addressbook.orgname ?? null,
+    address: addressbook.address ?? null,
   };
 }
 
 /**
- * Extract inventors.
- */
-function extractInventors(bibliographic) {
-  const inventors = get(
-    bibliographic,
-    "parties.inventors.inventor",
-    []
-  );
-
-  return toArray(inventors)
-    .map((inventor) =>
-      createPerson(inventor?.addressbook)
-    )
-    .filter(Boolean);
-}
-
-/**
- * Extract applicants.
- */
-function extractApplicants(bibliographic) {
-  const applicants = get(
-    bibliographic,
-    "parties.applicants.applicant",
-    []
-  );
-
-  return toArray(applicants)
-    .map((applicant) =>
-      createPerson(applicant?.addressbook)
-    )
-    .filter(Boolean);
-}
-
-/**
- * Extract assignees.
- */
-function extractAssignees(bibliographic) {
-  const assignees = get(
-    bibliographic,
-    "assignees.assignee",
-    []
-  );
-
-  return toArray(assignees)
-    .map((assignee) =>
-      createOrganization(
-        assignee?.addressbook
-      )
-    )
-    .filter(Boolean);
-}
-
-/**
- * Extract agents / attorneys.
- */
-function extractAgents(bibliographic) {
-  const agents = get(
-    bibliographic,
-    "parties.agents.agent",
-    []
-  );
-
-  return toArray(agents)
-    .map((agent) =>
-      createPerson(agent?.addressbook)
-    )
-    .filter(Boolean);
-}
-
-/**
- * Extract examiner.
- */
-function extractExaminer(bibliographic) {
-  const examiner = get(
-    bibliographic,
-    "parties.examiners.primary-examiner.addressbook"
-  );
-
-  if (!examiner) {
-    return null;
-  }
-
-  return createPerson(examiner);
-}
-
-/**
  * Extract patent parties.
+ *
+ * @param {object} bibliographic
  */
-export function extractParties(root) {
-  const bibliographic =
-    root["us-bibliographic-data-grant"] ??
-    root["us-bibliographic-data-application"] ??
-    {};
+export function extractParties(bibliographic) {
+  const usParties = get(bibliographic, "us-parties", {});
+
+  // -------------------------
+  // Inventors
+  // -------------------------
+
+  const inventors = toArray(
+    get(usParties, "inventors.inventor")
+  )
+    .map((inventor) =>
+      createPerson(inventor.addressbook)
+    )
+    .filter(Boolean);
+
+  // -------------------------
+  // Applicants
+  // -------------------------
+
+  const applicants = toArray(
+    get(usParties, "us-applicants.us-applicant")
+  )
+    .map((applicant) =>
+      createOrganization(applicant.addressbook)
+    )
+    .filter(Boolean);
+
+  // -------------------------
+  // Agents / Attorneys
+  // -------------------------
+
+  const agents = toArray(
+    get(usParties, "agents.agent")
+  )
+    .map((agent) =>
+      createPerson(agent.addressbook)
+    )
+    .filter(Boolean);
+
+  // -------------------------
+  // Assignees
+  // -------------------------
+
+  const assignees = toArray(
+    get(bibliographic, "assignees.assignee")
+  )
+    .map((assignee) =>
+      createOrganization(assignee.addressbook)
+    )
+    .filter(Boolean);
+
+  // -------------------------
+  // Examiner
+  // -------------------------
+
+  const primaryExaminer = get(
+    bibliographic,
+    "examiners.primary-examiner"
+  );
+
+  const examiner = primaryExaminer
+    ? {
+        firstName:
+          primaryExaminer["first-name"] ?? null,
+
+        lastName:
+          primaryExaminer["last-name"] ?? null,
+
+        fullName: [
+          primaryExaminer["first-name"],
+          primaryExaminer["last-name"],
+        ]
+          .filter(Boolean)
+          .join(" "),
+      }
+    : null;
 
   return {
-    inventors: extractInventors(bibliographic),
-
-    applicants: extractApplicants(bibliographic),
-
-    assignees: extractAssignees(bibliographic),
-
-    agents: extractAgents(bibliographic),
-
-    examiner: extractExaminer(bibliographic),
+    inventors,
+    applicants,
+    assignees,
+    agents,
+    examiner,
   };
 }

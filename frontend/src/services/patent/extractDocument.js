@@ -1,26 +1,18 @@
-/**
- * Safely returns a nested property.
- */
-function get(object, path, defaultValue = null) {
-  const value = path
-    .split(".")
-    .reduce((current, key) => current?.[key], object);
-
-  return value ?? defaultValue;
-}
+import {
+  get,
+  getText,
+} from "../parser/parserHelpers";
 
 /**
- * Extracts the core patent document information.
+ * Extract the core patent document information.
  *
- * @param {object} root USPTO patent root node
+ * @param {object} bibliographic
  * @param {string} patentType
  */
-export function extractDocument(root, patentType) {
-  const bibliographic =
-    root["us-bibliographic-data-grant"] ??
-    root["us-bibliographic-data-application"] ??
-    {};
-
+export function extractDocument(
+  bibliographic,
+  patentType
+) {
   return {
     patentType,
 
@@ -34,16 +26,19 @@ export function extractDocument(root, patentType) {
       "application-reference.document-id.doc-number"
     ),
 
-    title:
-      get(bibliographic, "invention-title.#text") ??
-      get(bibliographic, "invention-title"),
+    title: getText(
+      get(
+        bibliographic,
+        "invention-title"
+      )
+    ),
 
     kind: get(
       bibliographic,
       "publication-reference.document-id.kind"
     ),
 
-    language: root["@_lang"] ?? null,
+    language: null,
 
     publicationDate: get(
       bibliographic,
@@ -55,9 +50,14 @@ export function extractDocument(root, patentType) {
       "application-reference.document-id.date"
     ),
 
-    country: root["@_country"] ?? null,
+    country: get(
+      bibliographic,
+      "publication-reference.document-id.country"
+    ),
 
-    seriesCode:
-      bibliographic["us-application-series-code"] ?? null,
+    seriesCode: get(
+      bibliographic,
+      "us-application-series-code"
+    ),
   };
 }

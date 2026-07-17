@@ -5,6 +5,8 @@ import {
   extractPatent,
 } from "../services/parser";
 
+import { parseParagraph } from "../services/parser/richText";
+
 export default function ParserTestPage() {
   const [message, setMessage] = useState("");
 
@@ -20,59 +22,100 @@ export default function ParserTestPage() {
 
       const root = parsedXml["us-patent-grant"];
 
-      const biblio = root["us-bibliographic-data-grant"];
+      const biblio =
+        root["us-bibliographic-data-grant"];
+
       console.clear();
 
       console.log("======================================");
       console.log("BIBLIOGRAPHIC DATA");
-      console.dir(biblio, { depth: null });
-
+      console.dir(biblio, {
+        depth: null,
+      });
       console.log("======================================");
 
       const patent = extractPatent(parsedXml);
 
-      
-
       console.log("========================================");
       console.log("PATENT OBJECT");
-      console.log(patent);
+      console.dir(patent, {
+        depth: null,
+      });
 
       console.log("========================================");
       console.log("DOCUMENT");
-      console.log(patent.document);
+      console.dir(patent.document, {
+        depth: null,
+      });
 
       console.log("========================================");
       console.log("PARTIES");
-      console.log(patent.parties);
-
-      console.log("========================================");
-      console.log(parsedXml["us-patent-grant"]["us-bibliographic-data-grant"].parties);
+      console.dir(patent.parties, {
+        depth: null,
+      });
 
       console.log("========================================");
       console.log("CLASSIFICATIONS");
-      console.log(patent.classifications);
+      console.dir(
+        patent.classifications,
+        {
+          depth: null,
+        }
+      );
 
       console.log("========================================");
       console.log("RELATIONSHIPS");
-      console.log(patent.relationships);
+      console.dir(
+        patent.relationships,
+        {
+          depth: null,
+        }
+      );
 
       console.log("========================================");
       console.log("DESCRIPTION");
-      console.log(patent.description);
+      console.dir(
+        patent.description,
+        {
+          depth: null,
+        }
+      );
 
       console.log("========================================");
       console.log("DRAWINGS");
-      console.log(patent.drawings);
+      console.dir(
+        patent.drawings,
+        {
+          depth: null,
+        }
+      );
 
       console.log("========================================");
       console.log("CLAIMS");
-      console.log(patent.claims);
+      // console.log("Total Claims: ", patent.claims.total);
+      
+      console.dir(patent.claims, {
+        depth: null,
+      });
+      console.log("========================================");
+
+      // =====================================
+      // Rich Text Engine Test
+      // =====================================
+
+      console.log("========================================");
+      console.log("ABSTRACT");
+      console.dir(patent.abstract, {
+        depth: null,
+      });
+      console.log("========================================");
 
       setMessage(
         "Patent parsed successfully. Open Developer Tools (F12) and inspect the console."
       );
     } catch (error) {
       console.error(error);
+
       setMessage(error.message);
     }
   };

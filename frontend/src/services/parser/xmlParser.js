@@ -28,8 +28,21 @@ export function parsePatentXml(xmlString) {
   }
 
   try {
-    return parser.parse(xmlString);
+    const parsed = parser.parse(xmlString);
+
+    console.log(
+      "CLAIM 2:",
+      JSON.stringify(
+        parsed["us-patent-grant"].claims.claim[1]["claim-text"],
+        null,
+        2
+      )
+    );
+
+    return parsed;
   } catch (error) {
     throw new Error(`Failed to parse XML: ${error.message}`);
   }
 }
+
+export default parsePatentXml;

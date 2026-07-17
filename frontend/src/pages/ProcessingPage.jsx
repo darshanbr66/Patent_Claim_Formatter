@@ -2,7 +2,10 @@ import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useDocument } from "../context/DocumentContext";
-import { createMockPatentResponse } from "../mocks/mockPatentResponse";
+import {
+  parsePatentXml,
+  extractPatent,
+} from "../services/parser";
 
 const PROCESSING_STAGES = [
   {
@@ -11,19 +14,19 @@ const PROCESSING_STAGES = [
   },
   {
     progress: 35,
-    label: "Validating document...",
+    label: "Parsing USPTO XML...",
   },
   {
     progress: 60,
-    label: "Preparing processing request...",
+    label: "Extracting patent data...",
   },
   {
     progress: 85,
-    label: "Formatting patent claims...",
+    label: "Preparing viewer...",
   },
   {
     progress: 100,
-    label: "Finalizing document...",
+    label: "Finalizing...",
   },
 ];
 
@@ -45,48 +48,67 @@ export default function ProcessingPage() {
       return;
     }
 
-    let currentStageIndex = 0;
+    let cancelled = false;
 
-    setDocumentState((prev) => ({
-      ...prev,
-      processingStatus: "processing",
-      progress: PROCESSING_STAGES[0].progress,
-    }));
+    async function processPatent() {
+      try {
+        for (let i = 0; i < PROCESSING_STAGES.length; i++) {
+          if (cancelled) return;
 
-    const timer = setInterval(() => {
-      currentStageIndex++;
+          setStageIndex(i);
 
-      if (currentStageIndex >= PROCESSING_STAGES.length) {
-        clearInterval(timer);
+          setDocumentState((prev) => ({
+            ...prev,
+            processingStatus: "processing",
+            progress: PROCESSING_STAGES[i].progress,
+          }));
 
-        const mockResponse = createMockPatentResponse(documentState.file);
+          await new Promise((resolve) =>
+            setTimeout(resolve, 350)
+          );
+        }
+
+        const xml = await documentState.file.text();
+
+        const parsedXml = parsePatentXml(xml);
+
+        const patent = extractPatent(parsedXml);
+
+        if (cancelled) return;
 
         setDocumentState((prev) => ({
           ...prev,
           processingStatus: "completed",
           progress: 100,
-          result: mockResponse,
+          result: patent,
         }));
 
         setTimeout(() => {
           navigate("/viewer", {
             replace: true,
           });
-        }, 600);
+        }, 300);
+      } catch (error) {
+        console.error(error);
 
-        return;
+        setDocumentState((prev) => ({
+          ...prev,
+          processingStatus: "failed",
+          result: null,
+        }));
       }
+    }
 
-      setStageIndex(currentStageIndex);
+    processPatent();
 
-      setDocumentState((prev) => ({
-        ...prev,
-        progress: PROCESSING_STAGES[currentStageIndex].progress,
-      }));
-    }, 900);
-
-    return () => clearInterval(timer);
-  }, [documentState.file, navigate, setDocumentState]);
+    return () => {
+      cancelled = true;
+    };
+  }, [
+    documentState.file,
+    navigate,
+    setDocumentState,
+  ]);
 
   return (
     <section className="flex w-full items-center justify-center">
@@ -99,8 +121,8 @@ export default function ProcessingPage() {
           </h1>
 
           <p className="mt-4 max-w-xl text-center text-slate-600">
-            Please wait while your patent document is being processed and
-            formatted.
+            Please wait while your patent document is being parsed and
+            prepared.
           </p>
 
           <div className="mt-10 w-full">
@@ -116,7 +138,7 @@ export default function ProcessingPage() {
 
             <div className="h-3 overflow-hidden rounded-full bg-slate-200">
               <div
-                className="h-full rounded-full bg-blue-600 transition-all duration-700 ease-in-out"
+                className="h-full rounded-full bg-blue-600 transition-all duration-500"
                 style={{
                   width: `${documentState.progress}%`,
                 }}

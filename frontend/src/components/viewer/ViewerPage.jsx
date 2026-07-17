@@ -1,7 +1,9 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useDocument } from "../../context/DocumentContext";
+
+import { formatPatent } from "../../services/formatter";
 
 import ViewerToolbar from "./ViewerToolbar/ViewerToolbar";
 import ProcessingSummary from "./ProcessingSummary";
@@ -28,6 +30,11 @@ export default function ViewerPage() {
     return null;
   }
 
+  const formattedPatent = useMemo(
+    () => formatPatent(result),
+    [result]
+  );
+
   const handleUploadAnother = () => {
     resetDocument();
     navigate("/", { replace: true });
@@ -52,8 +59,8 @@ export default function ViewerPage() {
         onDownload={handleDownload}
         zoom={100}
         onZoomChange={handleZoomChange}
-        downloadDisabled={true}
-        zoomDisabled={true}
+        downloadDisabled
+        zoomDisabled
       />
 
       <ProcessingSummary
@@ -62,7 +69,7 @@ export default function ViewerPage() {
       />
 
       <DocumentCanvas
-        claims={result.claims}
+        document={formattedPatent}
       />
 
       <StatusBar
