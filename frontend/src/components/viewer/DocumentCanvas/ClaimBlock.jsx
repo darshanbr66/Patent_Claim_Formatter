@@ -1,9 +1,7 @@
 import ClaimNumber from "./ClaimNumber";
 import ParagraphRenderer from "./ParagraphRenderer";
 
-export default function ClaimBlock({
-  claim,
-}) {
+export default function ClaimBlock({ claim }) {
   if (!claim) {
     return null;
   }
@@ -11,18 +9,33 @@ export default function ClaimBlock({
   return (
     <section
       id={`claim-${claim.id}`}
-      className="group mb-8 scroll-mt-24 rounded px-2 py-1 transition-colors hover:bg-slate-50"
+      className="
+        scroll-mt-24
+        py-5
+        first:pt-0
+      "
     >
-      <div className="flex">
-        <ClaimNumber
-          number={claim.number}
-        />
+      <div className="flex items-start">
+        {/* Fixed Claim Number Column */}
+        <div
+          className="
+            w-12
+            shrink-0
+            pr-3
+            text-right
+            select-none
+          "
+        >
+          <ClaimNumber number={claim.number} />
+        </div>
 
-        <div className="flex-1">
+        {/* Claim Body */}
+        <div className="min-w-0 flex-1">
           {claim.paragraphs?.map((paragraph, index) => (
             <ParagraphRenderer
-              key={index}
+              key={`${claim.id}-${index}`}
               paragraph={paragraph}
+              level={0}
             />
           ))}
         </div>

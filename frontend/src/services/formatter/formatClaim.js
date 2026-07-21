@@ -8,6 +8,10 @@ export function formatClaim(claim) {
     return null;
   }
 
+  const paragraphs = (claim.paragraphs ?? [])
+    .map(formatParagraph)
+    .filter(Boolean);
+
   return {
     type: "claim",
 
@@ -19,9 +23,13 @@ export function formatClaim(claim) {
 
     isIndependent: claim.dependentOn == null,
 
-    paragraphs: (claim.paragraphs ?? [])
-      .map(formatParagraph)
-      .filter(Boolean),
+    // Existing structure (keep for compatibility)
+    paragraphs,
+
+    // New semantic structure
+    leadIn: paragraphs[0] ?? null,
+
+    limitations: paragraphs.slice(1),
 
     references: claim.references ?? [],
   };

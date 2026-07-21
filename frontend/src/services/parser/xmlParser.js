@@ -3,24 +3,17 @@ import { XMLParser } from "fast-xml-parser";
 const parser = new XMLParser({
   ignoreAttributes: false,
   attributeNamePrefix: "@_",
-
   parseAttributeValue: true,
   trimValues: true,
-
   allowBooleanAttributes: true,
-
   ignoreDeclaration: true,
   ignorePiTags: true,
   processEntities: true,
-
   isArray: () => false,
 });
 
 /**
- * Parse a USPTO XML string into a JavaScript object.
- *
- * @param {string} xmlString
- * @returns {object}
+ * Parse USPTO XML preserving node order.
  */
 export function parsePatentXml(xmlString) {
   if (!xmlString || typeof xmlString !== "string") {
@@ -28,18 +21,7 @@ export function parsePatentXml(xmlString) {
   }
 
   try {
-    const parsed = parser.parse(xmlString);
-
-    console.log(
-      "CLAIM 2:",
-      JSON.stringify(
-        parsed["us-patent-grant"].claims.claim[1]["claim-text"],
-        null,
-        2
-      )
-    );
-
-    return parsed;
+    return parser.parse(xmlString);
   } catch (error) {
     throw new Error(`Failed to parse XML: ${error.message}`);
   }

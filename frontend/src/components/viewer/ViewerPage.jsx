@@ -9,6 +9,7 @@ import ViewerToolbar from "./ViewerToolbar/ViewerToolbar";
 import ProcessingSummary from "./ProcessingSummary";
 import DocumentCanvas from "./DocumentCanvas/DocumentCanvas";
 import StatusBar from "./StatusBar";
+import { exportDocx } from "../../services/export";
 
 export default function ViewerPage() {
   const navigate = useNavigate();
@@ -40,10 +41,14 @@ export default function ViewerPage() {
     navigate("/", { replace: true });
   };
 
-  const handleDownload = () => {
-    console.info(
-      "PDF download will be implemented after backend integration."
-    );
+  const handleDownload = async () => {
+    try {
+      await exportDocx(formattedPatent);
+    } catch (error) {
+      console.error(error);
+
+      alert("Failed to export DOCX.");
+    }
   };
 
   const handleZoomChange = (zoom) => {
@@ -59,7 +64,7 @@ export default function ViewerPage() {
         onDownload={handleDownload}
         zoom={100}
         onZoomChange={handleZoomChange}
-        downloadDisabled
+        downloadDisabled={false}
         zoomDisabled
       />
 

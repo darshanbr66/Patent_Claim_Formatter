@@ -7,15 +7,19 @@ export default function ParagraphRenderer({
 }) {
   if (!paragraph) return null;
 
-  console.log("Paragraph AST:", paragraph.ast);
-
   return (
     <ClaimLimitation level={level}>
-      <div className="leading-8 text-[15px] text-slate-900">
-
-        {/* Temporary debug */}
-        
-
+      <div
+        className="
+          font-serif
+          text-[16px]
+          leading-[1.75]
+          text-slate-900
+          whitespace-pre-wrap
+          break-words
+          text-justify
+        "
+      >
         {paragraph.ast?.map((node, index) => (
           <RunRenderer
             key={index}

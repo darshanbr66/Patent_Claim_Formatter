@@ -16,7 +16,7 @@ export default function ClaimsSidebar({
 
     element.scrollIntoView({
       behavior: "smooth",
-      block: "start",
+      block: "center",
     });
 
     element.classList.add("bg-yellow-100");
@@ -50,8 +50,8 @@ export default function ClaimsSidebar({
       className="
         sticky
         top-24
-        h-fit
-        w-64
+         h-[calc(100vh-7rem)]
+        w-72
         rounded-xl
         border
         border-slate-200
@@ -74,7 +74,7 @@ export default function ClaimsSidebar({
           type="text"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search claims..."
+          placeholder="Search by claim number or text..."
           className="
             w-full
             rounded-md

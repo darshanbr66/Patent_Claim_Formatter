@@ -24,8 +24,8 @@ export default function DocumentCanvas({ document }) {
 
           <PatentMetadata document={document.document} />
 
-          <section className="mt-10">
-            {document.claims.map((claim) => (
+          <section className="mt-12">
+            {document.claims?.map((claim) => (
               <ClaimBlock
                 key={claim.id}
                 claim={claim}

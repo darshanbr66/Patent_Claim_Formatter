@@ -26,43 +26,23 @@ export default function RunRenderer({ run }) {
       );
 
     case "bold":
-      return (
-        <strong>
-          {renderChildren(run.children)}
-        </strong>
-      );
+      return <strong>{renderChildren(run.children)}</strong>;
 
     case "italic":
-      return (
-        <em>
-          {renderChildren(run.children)}
-        </em>
-      );
+      return <em>{renderChildren(run.children)}</em>;
 
     case "underline":
-      return (
-        <u>
-          {renderChildren(run.children)}
-        </u>
-      );
+      return <u>{renderChildren(run.children)}</u>;
 
     case "superscript":
-      return (
-        <sup>
-          {renderChildren(run.children)}
-        </sup>
-      );
+      return <sup>{renderChildren(run.children)}</sup>;
 
     case "subscript":
-      return (
-        <sub>
-          {renderChildren(run.children)}
-        </sub>
-      );
+      return <sub>{renderChildren(run.children)}</sub>;
 
     case "paragraph":
       return (
-        <div className="mt-2 ml-8">
+        <div className="mt-2">
           {renderChildren(run.children)}
         </div>
       );
