@@ -45,31 +45,42 @@ export default function ProcessingSummary({
   ];
 
   return (
-    <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+    <section className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
       {summaryItems.map((item) => {
         const Icon = item.icon;
 
         return (
           <div
             key={item.id}
-            className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition-shadow duration-200 hover:shadow-md"
+            className="
+              rounded-xl
+              border
+              border-slate-200
+              bg-white
+              px-5
+              py-4
+              shadow-sm
+              transition-shadow
+              duration-200
+              hover:shadow-md
+            "
           >
             <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-slate-500">
+              <div className="min-w-0">
+                <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
                   {item.title}
                 </p>
 
-                <p className="mt-2 text-xl font-semibold text-slate-900">
+                <p className="mt-1 text-2xl font-semibold leading-none text-slate-900">
                   {item.value}
                 </p>
               </div>
 
               <div
-                className={`flex h-12 w-12 items-center justify-center rounded-xl ${item.bgClass}`}
+                className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg ${item.bgClass}`}
               >
                 <Icon
-                  size={22}
+                  size={18}
                   className={item.iconClass}
                 />
               </div>

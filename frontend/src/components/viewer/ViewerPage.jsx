@@ -56,7 +56,13 @@ export default function ViewerPage() {
   };
 
   return (
-    <section className="mx-auto flex w-full max-w-7xl flex-col gap-6">
+    <section
+      className="
+        flex
+        flex-col
+        gap-4
+      "
+    >
       <ViewerToolbar
         document={result.document}
         metadata={result.metadata}
@@ -73,14 +79,24 @@ export default function ViewerPage() {
         metadata={result.metadata}
       />
 
-      <DocumentCanvas
-        document={formattedPatent}
-      />
+      <div
+        className="
+          h-[calc(100vh-230px)]
+          min-h-[650px]
+          overflow-hidden
+        "
+      >
+        <DocumentCanvas
+          patent={formattedPatent}
+        />
+      </div>
 
-      <StatusBar
-        document={result.document}
-        metadata={result.metadata}
-      />
+      <div className="pt-4">
+        <StatusBar
+          document={result.document}
+          metadata={result.metadata}
+        />
+      </div>
     </section>
   );
 }

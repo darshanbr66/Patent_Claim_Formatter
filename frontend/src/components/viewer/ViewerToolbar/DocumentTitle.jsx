@@ -38,19 +38,19 @@ export default function DocumentTitle({
 
   return (
     <div className="min-w-0">
-      <div className="flex flex-wrap items-center gap-3">
-        <h1 className="truncate text-xl font-semibold tracking-tight text-slate-900">
+      <div className="flex flex-wrap items-center gap-2">
+        <h1 className="truncate text-2xl font-semibold leading-none tracking-tight text-slate-900">
           {document?.name || "Untitled Document"}
         </h1>
 
         <span
-          className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ${status.badge}`}
+          className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-[11px] font-semibold ${status.badge}`}
         >
           {status.label}
         </span>
       </div>
 
-      <div className="mt-2 flex flex-wrap items-center gap-2 text-sm text-slate-500">
+      <div className="mt-1 flex flex-wrap items-center gap-1.5 text-xs text-slate-500">
         <span>
           {metadata?.totalClaims ?? 0} Claims
         </span>

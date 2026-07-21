@@ -1,0 +1,41 @@
+export default function ScrollContainer({ children }) {
+  return (
+    <div
+      className="
+        flex
+        h-full
+        min-h-0
+        flex-1
+        flex-col
+        overflow-hidden
+        rounded-2xl
+        border
+        border-slate-200
+        bg-slate-100
+        shadow-sm
+      "
+    >
+      <div
+        className="
+          viewer-scrollbar
+          flex-1
+          overflow-y-auto
+          overflow-x-auto
+          scroll-smooth
+        "
+      >
+        <div
+          className="
+            flex
+            min-h-full
+            justify-center
+            px-10
+            py-10
+          "
+        >
+          {children}
+        </div>
+      </div>
+    </div>
+  );
+}

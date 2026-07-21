@@ -1,8 +1,12 @@
-@import "tailwindcss";
+.viewer-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #94a3b8 transparent;
+}
 
 /* Chrome / Edge */
 .viewer-scrollbar::-webkit-scrollbar {
-  width: 8px;
+  width: 10px;
+  height: 10px;
 }
 
 .viewer-scrollbar::-webkit-scrollbar-track {
@@ -12,14 +16,15 @@
 .viewer-scrollbar::-webkit-scrollbar-thumb {
   background: #cbd5e1;
   border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
 }
 
 .viewer-scrollbar::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
+  background-clip: content-box;
 }
 
-/* Firefox */
-.viewer-scrollbar {
-  scrollbar-width: thin;
-  scrollbar-color: #cbd5e1 transparent;
+.viewer-scrollbar::-webkit-scrollbar-corner {
+  background: transparent;
 }

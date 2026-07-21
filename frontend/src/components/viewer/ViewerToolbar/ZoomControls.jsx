@@ -12,15 +12,26 @@ export default function ZoomControls({
 
     const zoom = Number(event.target.value);
 
-    if (onChange) {
-      onChange(zoom);
-    }
+    onChange?.(zoom);
   };
 
   return (
     <div className="flex items-center gap-2">
-      <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-300 bg-white text-slate-600">
-        <ZoomIn size={16} />
+      <div
+        className="
+          flex
+          h-9
+          w-9
+          items-center
+          justify-center
+          rounded-lg
+          border
+          border-slate-300
+          bg-white
+          text-slate-600
+        "
+      >
+        <ZoomIn size={15} />
       </div>
 
       <select
@@ -28,8 +39,8 @@ export default function ZoomControls({
         onChange={handleChange}
         disabled={disabled}
         className="
-          h-10
-          rounded-xl
+          h-9
+          rounded-lg
           border
           border-slate-300
           bg-white
@@ -37,6 +48,7 @@ export default function ZoomControls({
           text-sm
           font-medium
           text-slate-700
+          transition
           focus:border-blue-500
           focus:outline-none
           focus:ring-2

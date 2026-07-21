@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { RotateCcw } from "lucide-react";
 
 import DropZone from "./DropZone";
 import FilePreview from "./FilePreview";
@@ -30,7 +31,7 @@ export default function UploadCard() {
     setSelectedFile(result.file);
   };
 
-  const handleRemove = () => {
+  const handleReplaceFile = () => {
     setSelectedFile(null);
     setValidationMessage("");
 
@@ -59,33 +60,71 @@ export default function UploadCard() {
 
   return (
     <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
-      <DropZone
-        onFileSelect={handleFileSelection}
-        isDragging={isDragging}
-        setIsDragging={setIsDragging}
-      />
+      {!selectedFile ? (
+        <>
+          <DropZone
+            onFileSelect={handleFileSelection}
+            isDragging={isDragging}
+            setIsDragging={setIsDragging}
+          />
 
-      <ValidationMessage message={validationMessage} />
+          <ValidationMessage message={validationMessage} />
+        </>
+      ) : (
+        <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-6">
+          <FilePreview
+            file={selectedFile}
+            onRemove={handleReplaceFile}
+          />
 
-      <FilePreview
-        file={selectedFile}
-        onRemove={handleRemove}
-      />
+          <div className="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+            <button
+              type="button"
+              onClick={handleReplaceFile}
+              className="
+                inline-flex
+                items-center
+                justify-center
+                gap-2
+                rounded-xl
+                border
+                border-slate-300
+                bg-white
+                px-5
+                py-3
+                text-sm
+                font-semibold
+                text-slate-700
+                transition
+                hover:bg-slate-100
+              "
+            >
+              <RotateCcw className="h-4 w-4" />
+              Replace File
+            </button>
 
-      <div className="mt-8 flex justify-end">
-        <button
-          type="button"
-          onClick={handleProcessDocument}
-          disabled={!selectedFile}
-          className={`rounded-xl px-8 py-3 text-sm font-semibold text-white transition-all duration-200 ${
-            selectedFile
-              ? "bg-blue-600 shadow hover:bg-blue-700"
-              : "cursor-not-allowed bg-slate-300"
-          }`}
-        >
-          Process Document
-        </button>
-      </div>
+            <button
+              type="button"
+              onClick={handleProcessDocument}
+              className="
+                rounded-xl
+                bg-blue-600
+                px-6
+                py-3
+                text-sm
+                font-semibold
+                text-white
+                shadow
+                transition
+                hover:bg-blue-700
+                hover:shadow-lg
+              "
+            >
+              Process Document
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

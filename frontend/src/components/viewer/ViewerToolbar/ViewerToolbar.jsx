@@ -14,16 +14,16 @@ export default function ViewerToolbar({
   zoomDisabled = true,
 }) {
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-      <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
-        {/* Left Section */}
+    <div className="rounded-xl border border-slate-200 bg-white px-5 py-4 shadow-sm">
+      <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+        {/* Left */}
         <DocumentTitle
           document={document}
           metadata={metadata}
         />
 
-        {/* Right Section */}
-        <div className="flex flex-wrap items-center gap-3">
+        {/* Right */}
+        <div className="flex flex-wrap items-center justify-end gap-2">
           <ZoomControls
             value={zoom}
             disabled={zoomDisabled}
