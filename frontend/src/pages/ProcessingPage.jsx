@@ -2,10 +2,8 @@ import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useDocument } from "../context/DocumentContext";
-import {
-  parsePatentXml,
-  extractPatent,
-} from "../services/parser";
+import { parsePatent } from "../api/patentApi";
+import formatBackendPatent from "../services/adapters/formatBackendPatent";
 
 const PROCESSING_STAGES = [
   {
@@ -68,11 +66,15 @@ export default function ProcessingPage() {
           );
         }
 
-        const xml = await documentState.file.text();
+        const backendResponse = await parsePatent(
+          documentState.file
+        );
+        // console.log("Backend Response:", backendResponse);
 
-        const parsedXml = parsePatentXml(xml);
-
-        const patent = extractPatent(parsedXml);
+        const patent = formatBackendPatent(
+          backendResponse
+        );
+        // console.log("Formatted Patent:", patent);
 
         if (cancelled) return;
 
@@ -82,6 +84,8 @@ export default function ProcessingPage() {
           progress: 100,
           result: patent,
         }));
+
+        // console.log("Saving to Context:", patent);
 
         setTimeout(() => {
           navigate("/viewer", {

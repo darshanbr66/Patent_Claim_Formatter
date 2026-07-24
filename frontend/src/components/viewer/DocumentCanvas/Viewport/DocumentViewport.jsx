@@ -5,7 +5,12 @@ import PatentHeader from "../Page/PatentHeader";
 import PatentMetadata from "../Page/PatentMetadata";
 import ClaimBlock from "../Page/ClaimBlock";
 
-export default function DocumentViewport({ document }) {
+export default function DocumentViewport({
+  document,
+  searchTerm,
+  searchResults,
+  selectedClaimId,
+}) {
   return (
     <div className="flex h-full min-h-0 flex-1 flex-col">
       <ScrollContainer>
@@ -24,6 +29,9 @@ export default function DocumentViewport({ document }) {
                 <ClaimBlock
                   key={claim.id}
                   claim={claim}
+                  selected={claim.id === selectedClaimId}
+                  searchTerm={searchTerm}
+                  searchResults={searchResults}
                 />
               ))}
             </section>

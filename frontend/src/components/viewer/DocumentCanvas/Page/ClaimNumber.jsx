@@ -1,17 +1,16 @@
 export default function ClaimNumber({ number }) {
   return (
-    <div
+    <span
       className="
         font-serif
-        text-[17px]
-        font-semibold
-        leading-8
+        text-[15px]
+        leading-[1.7]
+        font-medium
         text-slate-900
         tabular-nums
-        select-none
       "
     >
       {number}.
-    </div>
+    </span>
   );
 }

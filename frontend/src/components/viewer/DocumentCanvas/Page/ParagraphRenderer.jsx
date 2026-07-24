@@ -7,6 +7,10 @@ export default function ParagraphRenderer({
 }) {
   if (!paragraph) return null;
 
+  const hasAst =
+    Array.isArray(paragraph.ast) &&
+    paragraph.ast.length > 0;
+
   return (
     <ClaimLimitation level={level}>
       <div
@@ -20,12 +24,16 @@ export default function ParagraphRenderer({
           text-justify
         "
       >
-        {paragraph.ast?.map((node, index) => (
-          <RunRenderer
-            key={index}
-            run={node}
-          />
-        ))}
+        {hasAst ? (
+          paragraph.ast.map((node, index) => (
+            <RunRenderer
+              key={index}
+              run={node}
+            />
+          ))
+        ) : (
+          paragraph.text
+        )}
       </div>
     </ClaimLimitation>
   );

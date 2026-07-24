@@ -6,6 +6,7 @@ export default function Sidebar({
   claims = [],
   searchTerm = "",
   onSearchChange,
+  searchResults = [],
   selectedClaimId,
   onSelectClaim,
 }) {
@@ -28,6 +29,7 @@ export default function Sidebar({
         <SearchBox
           value={searchTerm}
           onChange={onSearchChange}
+          resultCount={searchResults.length}
         />
       </div>
 
@@ -36,15 +38,15 @@ export default function Sidebar({
         <ClaimStatistics claims={claims} />
       </div>
 
-      {/* Scrollable Claim List */}
-        <div
+      {/* Claim List */}
+      <div
         className="
-            flex-1
-            min-h-0
-            overflow-y-auto
-            viewer-scrollbar
+          flex-1
+          min-h-0
+          overflow-y-auto
+          viewer-scrollbar
         "
-        >
+      >
         <ClaimNavigator
           claims={claims}
           selectedClaimId={selectedClaimId}

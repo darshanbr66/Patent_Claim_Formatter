@@ -3,14 +3,24 @@ export default function Page({ children }) {
     <div
       className="
         mx-auto
-        my-10
+        my-8
+        w-full
+        max-w-[210mm]
         min-h-[297mm]
-        w-[210mm]
         bg-white
-        shadow-2xl
+        border
+        border-slate-200
+        rounded-sm
+        shadow-lg
+        overflow-hidden
       "
     >
-      <div className="px-[28mm] py-[25mm]">
+      <div
+        className="
+          px-[26mm]
+          py-[24mm]
+        "
+      >
         {children}
       </div>
     </div>

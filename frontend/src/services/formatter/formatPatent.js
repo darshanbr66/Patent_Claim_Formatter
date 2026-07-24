@@ -1,21 +1,48 @@
 import { formatClaim } from "./formatClaim";
+import formatDocument from "./formatDocument";
+import formatStatistics from "./formatStatistics";
 
 /**
- * Format the parsed patent into a renderer-friendly document.
+ * Formats the complete patent into the UI model.
+ *
+ * This is the single entry point used by the viewer.
  */
 export function formatPatent(patent) {
   if (!patent) {
     return null;
   }
 
-  return {
-    document: patent.document ?? null,
+  const claims = (
+    Array.isArray(patent.claims)
+      ? patent.claims
+      : patent.claims?.claims ?? []
+  )
+    .map(formatClaim)
+    .filter(Boolean);
 
+  return {
+    /*
+     * Document
+     */
+    document: patent.document
+      ? formatDocument(patent.document)
+      : null,
+
+    /*
+     * Processing statistics
+     */
+    statistics: formatStatistics(patent),
+
+    /*
+     * Other sections
+     */
     parties: patent.parties ?? null,
 
-    classifications: patent.classifications ?? null,
+    classifications:
+      patent.classifications ?? null,
 
-    relationships: patent.relationships ?? null,
+    relationships:
+      patent.relationships ?? null,
 
     abstract: patent.abstract ?? null,
 
@@ -23,9 +50,10 @@ export function formatPatent(patent) {
 
     drawings: patent.drawings ?? null,
 
-    claims: (patent.claims?.claims ?? [])
-      .map(formatClaim)
-      .filter(Boolean),
+    /*
+     * Claims
+     */
+    claims,
   };
 }
 

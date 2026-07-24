@@ -1,6 +1,7 @@
 import ClaimBlock from "./ClaimBlock";
 
 export default function ClaimRenderer({ claims }) {
+  // console.log("ClaimElementRenderer is rendering");
   if (!Array.isArray(claims) || claims.length === 0) {
     return null;
   }

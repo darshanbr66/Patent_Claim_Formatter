@@ -17,6 +17,10 @@ export default function ViewerPage() {
   const {
     documentState,
     resetDocument,
+
+    searchTerm,
+    setSearchTerm,
+    searchResults,
   } = useDocument();
 
   const { result } = documentState;
@@ -27,14 +31,13 @@ export default function ViewerPage() {
     }
   }, [result, navigate]);
 
-  if (!result) {
+  const formattedPatent = useMemo(() => {
+    return result ? formatPatent(result) : null;
+  }, [result]);
+
+  if (!formattedPatent) {
     return null;
   }
-
-  const formattedPatent = useMemo(
-    () => formatPatent(result),
-    [result]
-  );
 
   const handleUploadAnother = () => {
     resetDocument();
@@ -46,7 +49,6 @@ export default function ViewerPage() {
       await exportDocx(formattedPatent);
     } catch (error) {
       console.error(error);
-
       alert("Failed to export DOCX.");
     }
   };
@@ -88,6 +90,9 @@ export default function ViewerPage() {
       >
         <DocumentCanvas
           patent={formattedPatent}
+          searchTerm={searchTerm}
+          onSearchChange={setSearchTerm}
+          searchResults={searchResults}
         />
       </div>
 

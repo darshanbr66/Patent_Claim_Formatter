@@ -2,43 +2,69 @@ import {
   CheckCircle2,
   FileText,
   Timer,
-  Cpu,
+  ShieldCheck,
 } from "lucide-react";
 
 export default function ProcessingSummary({
   document,
   metadata,
 }) {
+  const statistics = document?.statistics ?? {};
+
   const summaryItems = [
     {
       id: "status",
       title: "Status",
-      value: metadata?.status || "Unknown",
+      value:
+        document?.document?.status ??
+        metadata?.status ??
+        "Unknown",
+
       icon: CheckCircle2,
       iconClass: "text-emerald-600",
       bgClass: "bg-emerald-50",
     },
+
     {
       id: "claims",
-      title: "Total Claims",
-      value: metadata?.totalClaims ?? 0,
+      title: "Claims",
+
+      value:
+        statistics.claimCount ??
+        metadata?.totalClaims ??
+        0,
+
       icon: FileText,
       iconClass: "text-blue-600",
       bgClass: "bg-blue-50",
     },
+
     {
-      id: "time",
-      title: "Processing Time",
-      value: metadata?.processingTime || "--",
+      id: "processing",
+
+      title: "Processing",
+
+      value:
+        statistics.processingTime != null
+          ? `${statistics.processingTime} ms`
+          : "--",
+
       icon: Timer,
       iconClass: "text-amber-600",
       bgClass: "bg-amber-50",
     },
+
     {
-      id: "version",
-      title: "Formatter",
-      value: `v${metadata?.formatterVersion ?? "1.0.0"}`,
-      icon: Cpu,
+      id: "confidence",
+
+      title: "Confidence",
+
+      value:
+        statistics.confidence != null
+          ? `${statistics.confidence}%`
+          : "--",
+
+      icon: ShieldCheck,
       iconClass: "text-violet-600",
       bgClass: "bg-violet-50",
     },
@@ -77,7 +103,7 @@ export default function ProcessingSummary({
               </div>
 
               <div
-                className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg ${item.bgClass}`}
+                className={`flex h-10 w-10 items-center justify-center rounded-lg ${item.bgClass}`}
               >
                 <Icon
                   size={18}

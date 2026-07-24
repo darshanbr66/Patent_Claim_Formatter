@@ -1,45 +1,86 @@
-import { useMemo, useState } from "react";
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 
 import Sidebar from "./Sidebar/Sidebar";
-
 import DocumentViewport from "./Viewport/DocumentViewport";
 
-export default function DocumentCanvas({ patent }) {
-  const [searchTerm, setSearchTerm] = useState("");
+import useActiveClaim from "../../../hooks/useActiveClaim";
 
-  const [selectedClaimId, setSelectedClaimId] = useState(null);
+export default function DocumentCanvas({
+  patent,
+  searchTerm,
+  onSearchChange,
+  searchResults,
+}) {
+  /*
+   * Selected by clicking in the sidebar.
+   */
+  const [selectedClaimId, setSelectedClaimId] =
+    useState(null);
+
+  const manualNavigationRef = useRef(false);
+
+  /*
+   * Selected automatically while scrolling.
+   */
+  const activeClaimId = useActiveClaim();
 
   const claims = patent?.claims ?? [];
 
+  /*
+   * Filter the sidebar claim list.
+   * The document itself still renders all claims.
+   */
   const filteredClaims = useMemo(() => {
     if (!searchTerm.trim()) {
       return claims;
     }
 
-    const query = searchTerm.toLowerCase();
-
-    return claims.filter((claim) => {
-      return (
-        String(claim.number).includes(query) ||
-        claim.text?.toLowerCase().includes(query)
-      );
-    });
-  }, [claims, searchTerm]);
-
-  function handleSelectClaim(claim) {
-    setSelectedClaimId(claim.id);
-
-    const element = document.getElementById(
-      `claim-${claim.id}`
+    const matchedIds = new Set(
+      searchResults.map((result) => result.claimId)
     );
 
-    if (!element) return;
+    return claims.filter((claim) =>
+      matchedIds.has(claim.id)
+    );
+  }, [claims, searchResults, searchTerm]);
 
-    element.scrollIntoView({
-      behavior: "smooth",
-      block: "center",
-    });
+  function handleSelectClaim(claim) {
+    manualNavigationRef.current = true;
+
+    setSelectedClaimId(claim.id);
+
+    document
+      .getElementById(`claim-${claim.id}`)
+      ?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+
+    window.setTimeout(() => {
+      manualNavigationRef.current = false;
+    }, 500);
   }
+
+  /*
+   * If the user is scrolling,
+   * keep the selected claim synchronized.
+   */
+  useEffect(() => {
+    if (!activeClaimId) {
+      return;
+    }
+
+    if (manualNavigationRef.current) {
+      return;
+    }
+
+    setSelectedClaimId(Number(activeClaimId));
+  }, [activeClaimId]);
 
   return (
     <section
@@ -63,7 +104,8 @@ export default function DocumentCanvas({ patent }) {
         <Sidebar
           claims={filteredClaims}
           searchTerm={searchTerm}
-          onSearchChange={setSearchTerm}
+          onSearchChange={onSearchChange}
+          searchResults={searchResults}
           selectedClaimId={selectedClaimId}
           onSelectClaim={handleSelectClaim}
         />
@@ -80,6 +122,9 @@ export default function DocumentCanvas({ patent }) {
       >
         <DocumentViewport
           document={patent}
+          searchTerm={searchTerm}
+          searchResults={searchResults}
+          selectedClaimId={selectedClaimId}
         />
       </div>
     </section>
