@@ -15,14 +15,33 @@ export default function PatentMetadata({ document }) {
     return value;
   };
 
+  const getDocumentType = (type) => {
+  switch (type) {
+    case "USPTO_XML":
+      return "USPTO XML";
+
+    case "USPTO_PDF":
+      return "USPTO PDF";
+
+    case "EPO_XML":
+      return "EPO XML";
+
+    case "WIPO_XML":
+      return "WIPO XML";
+
+    default:
+      return type || "—";
+  }
+};
+
   const rows = [
-    ["Document Type", document.type],
-    ["Processing Status", document.status],
+    ["Document Type", getDocumentType(document.type)],
+    // ["Processing Status", document.status],
 
     ["Application No.", document.applicationNumber],
     ["Application Date", document.applicationDate],
 
-    ["Publication No.", document.publicationNumber],
+    // ["Publication No.", document.publicationNumber],
     ["Publication Date", document.publicationDate],
 
     ["Patent Number", document.patentNumber],

@@ -3,14 +3,14 @@ export default function ClaimReference({ reference }) {
     return null;
   }
 
-  const label =
-    reference.text?.replace(/^claim/i, "Claim") ?? "Claim";
+  const claimNumber = reference.claim_number;
+  const label = reference.text ?? `claim ${claimNumber}`;
 
   function handleClick() {
-    if (!reference.idref) return;
+    if (!claimNumber) return;
 
     const element = document.getElementById(
-      `claim-${reference.idref}`
+      `claim-${claimNumber}`
     );
 
     if (!element) return;
@@ -20,24 +20,33 @@ export default function ClaimReference({ reference }) {
       block: "center",
     });
 
-    element.classList.add("bg-yellow-100");
+    element.classList.add(
+      "ring-2",
+      "ring-blue-300",
+      "rounded"
+    );
 
     setTimeout(() => {
-      element.classList.remove("bg-yellow-100");
-    }, 1500);
+      element.classList.remove(
+        "ring-2",
+        "ring-blue-300",
+        "rounded"
+      );
+    }, 1200);
   }
 
   return (
     <button
       type="button"
+      title={`Go to Claim ${claimNumber}`}
       onClick={handleClick}
       className="
         inline
-        font-medium
-        text-blue-700
-        hover:text-blue-900
+        text-inherit
+        cursor-pointer
+        transition-all
+        hover:text-blue-700
         hover:underline
-        transition-colors
       "
     >
       {label}

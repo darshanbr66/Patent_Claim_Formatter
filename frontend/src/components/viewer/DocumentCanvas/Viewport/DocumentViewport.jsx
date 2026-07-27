@@ -29,7 +29,7 @@ export default function DocumentViewport({
                 <ClaimBlock
                   key={claim.id}
                   claim={claim}
-                  selected={claim.id === selectedClaimId}
+                  selected={claim.number === selectedClaimId}
                   searchTerm={searchTerm}
                   searchResults={searchResults}
                 />

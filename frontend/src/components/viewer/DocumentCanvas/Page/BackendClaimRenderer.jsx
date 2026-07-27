@@ -1,5 +1,6 @@
 import ClaimElementRenderer from "./ClaimElementRenderer";
-import highlightText from "../../../../services/search/highlightText";
+import renderInlineContent from "./renderInlineContent";
+
 
 export default function BackendClaimRenderer({
   claim,
@@ -9,10 +10,7 @@ export default function BackendClaimRenderer({
 
   const searchTerm = viewerState?.searchTerm ?? "";
 
-  const headerParts = highlightText(
-    claim.header ?? "",
-    searchTerm
-  );
+  
 
   return (
     <div
@@ -31,22 +29,11 @@ export default function BackendClaimRenderer({
             break-words
           "
         >
-          {headerParts.map((part, index) =>
-            part.highlighted ? (
-              <mark
-                key={index}
-                className="
-                  rounded
-                  bg-yellow-200
-                  px-[1px]
-                "
-              >
-                {part.text}
-              </mark>
-            ) : (
-              <span key={index}>{part.text}</span>
-            )
-          )}
+          {renderInlineContent({
+            text: claim.header,
+            references: claim.references,
+            searchTerm,
+          })}
         </div>
       )}
 

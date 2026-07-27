@@ -16,7 +16,7 @@ export default function ClaimBlock({
 
   return (
     <section
-      id={`claim-${claim.id}`}
+      id={`claim-${claim.number}`}
       className={`
         scroll-mt-24
         py-5

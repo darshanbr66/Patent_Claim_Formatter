@@ -9,6 +9,7 @@ import Sidebar from "./Sidebar/Sidebar";
 import DocumentViewport from "./Viewport/DocumentViewport";
 
 import useActiveClaim from "../../../hooks/useActiveClaim";
+import useClaimNavigation from "../../../hooks/useClaimNavigation";
 
 export default function DocumentCanvas({
   patent,
@@ -24,6 +25,10 @@ export default function DocumentCanvas({
 
   const manualNavigationRef = useRef(false);
 
+  const { navigateToClaim } = useClaimNavigation({
+    setSelectedClaimId,
+    manualNavigationRef,
+  });
   /*
    * Selected automatically while scrolling.
    */
@@ -49,23 +54,7 @@ export default function DocumentCanvas({
     );
   }, [claims, searchResults, searchTerm]);
 
-  function handleSelectClaim(claim) {
-    manualNavigationRef.current = true;
-
-    setSelectedClaimId(claim.id);
-
-    document
-      .getElementById(`claim-${claim.id}`)
-      ?.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      });
-
-    window.setTimeout(() => {
-      manualNavigationRef.current = false;
-    }, 500);
-  }
-
+  
   /*
    * If the user is scrolling,
    * keep the selected claim synchronized.
@@ -81,6 +70,30 @@ export default function DocumentCanvas({
 
     setSelectedClaimId(Number(activeClaimId));
   }, [activeClaimId]);
+
+  useEffect(() => {
+    function handleClaimNavigation(event) {
+      const claimNumber = event.detail;
+
+      if (claimNumber == null) {
+        return;
+      }
+
+      navigateToClaim(claimNumber);
+    }
+
+    window.addEventListener(
+      "claim:navigate",
+      handleClaimNavigation
+    );
+
+    return () => {
+      window.removeEventListener(
+        "claim:navigate",
+        handleClaimNavigation
+      );
+    };
+  }, [navigateToClaim]);
 
   return (
     <section
@@ -107,7 +120,9 @@ export default function DocumentCanvas({
           onSearchChange={onSearchChange}
           searchResults={searchResults}
           selectedClaimId={selectedClaimId}
-          onSelectClaim={handleSelectClaim}
+          onSelectClaim={(claim) =>
+              navigateToClaim(claim.number)
+          }
         />
       </div>
 
