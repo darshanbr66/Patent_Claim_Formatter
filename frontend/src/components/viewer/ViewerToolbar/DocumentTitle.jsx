@@ -1,10 +1,11 @@
 function getStatusStyles(status) {
-  switch (status?.toLowerCase()) {
+  switch ((status || "").toLowerCase()) {
+    case "success":
     case "completed":
       return {
         badge:
           "bg-emerald-100 text-emerald-700 border border-emerald-200",
-        label: "Completed",
+        label: "Success",
       };
 
     case "processing":
@@ -25,7 +26,7 @@ function getStatusStyles(status) {
       return {
         badge:
           "bg-slate-100 text-slate-700 border border-slate-200",
-        label: status || "Unknown",
+        label: "Unknown",
       };
   }
 }
@@ -33,14 +34,45 @@ function getStatusStyles(status) {
 export default function DocumentTitle({
   document,
   metadata,
+  statistics,
+  claims,
 }) {
-  const status = getStatusStyles(metadata?.status);
+  const backendStatus =
+    document?.status ??
+    metadata?.status ??
+    "";
+
+  const status = getStatusStyles(backendStatus);
+
+  const title =
+    metadata?.title ||
+    document?.title ||
+    document?.type ||
+    "Untitled Document";
+
+  const claimCount =
+    claims?.length ||
+    statistics?.claimCount ||
+    0;
+
+  const documentType =
+    document?.type ||
+    "Patent Document";
+
+  const processingText =
+    backendStatus.toLowerCase() === "success"
+      ? "Processed"
+      : backendStatus.toLowerCase() === "processing"
+      ? "Processing"
+      : backendStatus.toLowerCase() === "failed"
+      ? "Failed"
+      : "Not processed";
 
   return (
     <div className="min-w-0">
       <div className="flex flex-wrap items-center gap-2">
         <h1 className="truncate text-2xl font-semibold leading-none tracking-tight text-slate-900">
-          {document?.name || "Untitled Document"}
+          {title}
         </h1>
 
         <span
@@ -51,23 +83,15 @@ export default function DocumentTitle({
       </div>
 
       <div className="mt-1 flex flex-wrap items-center gap-1.5 text-xs text-slate-500">
-        <span>
-          {metadata?.totalClaims ?? 0} Claims
-        </span>
+        <span>{claimCount} Claims</span>
 
         <span>•</span>
 
-        <span>
-          Formatter v{metadata?.formatterVersion ?? "1.0.0"}
-        </span>
+        <span>{documentType}</span>
 
         <span>•</span>
 
-        <span>
-          {document?.processedAt
-            ? new Date(document.processedAt).toLocaleString()
-            : "Not processed"}
-        </span>
+        <span>{processingText}</span>
       </div>
     </div>
   );

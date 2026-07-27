@@ -30,8 +30,16 @@ export function formatPatent(patent) {
 
     /*
      * Processing statistics
+     *
+     * The backend now already returns a formatted
+     * statistics object, so reuse it directly.
      */
-    statistics: formatStatistics(patent),
+    statistics: patent.statistics ?? formatStatistics(patent),
+
+    /*
+     * Metadata
+     */
+    metadata: patent.metadata ?? {},
 
     /*
      * Other sections

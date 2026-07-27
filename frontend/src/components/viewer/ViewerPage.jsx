@@ -12,6 +12,7 @@ import StatusBar from "./StatusBar";
 import { exportDocx } from "../../services/export";
 
 export default function ViewerPage() {
+ 
   const navigate = useNavigate();
 
   const {
@@ -57,6 +58,9 @@ export default function ViewerPage() {
     console.info("Selected zoom:", zoom);
   };
 
+   console.log("Backend result:", result);
+console.log("Statistics:", formattedPatent.statistics);
+
   return (
     <section
       className="
@@ -66,8 +70,10 @@ export default function ViewerPage() {
       "
     >
       <ViewerToolbar
-        document={result.document}
-        metadata={result.metadata}
+        document={formattedPatent.document}
+        metadata={formattedPatent.metadata}
+        statistics={formattedPatent.statistics}
+        claims={formattedPatent.claims}
         onUploadAnother={handleUploadAnother}
         onDownload={handleDownload}
         zoom={100}
@@ -75,10 +81,11 @@ export default function ViewerPage() {
         downloadDisabled={false}
         zoomDisabled
       />
-
       <ProcessingSummary
-        document={result.document}
-        metadata={result.metadata}
+          document={formattedPatent.document}
+          statistics={formattedPatent.statistics}
+          claims={formattedPatent.claims}
+          metadata={formattedPatent.metadata}
       />
 
       <div
@@ -98,8 +105,9 @@ export default function ViewerPage() {
 
       <div className="pt-4">
         <StatusBar
-          document={result.document}
-          metadata={result.metadata}
+          document={formattedPatent.document}
+          statistics={formattedPatent.statistics}
+          claims={formattedPatent.claims}
         />
       </div>
     </section>

@@ -7,18 +7,20 @@ import {
 
 export default function ProcessingSummary({
   document,
-  metadata,
+  statistics = {},
+  claims = [],
 }) {
-  const statistics = document?.statistics ?? {};
+
+  const backend = document ?? {};
 
   const summaryItems = [
     {
       id: "status",
       title: "Status",
       value:
-        document?.document?.status ??
-        metadata?.status ??
-        "Unknown",
+        document?.status
+          ? document.status.charAt(0).toUpperCase() + document.status.slice(1)
+          : "Unknown",
 
       icon: CheckCircle2,
       iconClass: "text-emerald-600",
@@ -30,8 +32,8 @@ export default function ProcessingSummary({
       title: "Claims",
 
       value:
-        statistics.claimCount ??
-        metadata?.totalClaims ??
+        claims.length ||
+        statistics.claimCount ||
         0,
 
       icon: FileText,

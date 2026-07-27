@@ -1,17 +1,29 @@
-import { CalendarDays, CheckCircle2, FileBadge2 } from "lucide-react";
+import {
+  CalendarDays,
+  CheckCircle2,
+  FileBadge2,
+} from "lucide-react";
 
 export default function StatusBar({
   document,
-  metadata,
+  statistics,
+  claims,
 }) {
   const processedDate = document?.processedAt
     ? new Date(document.processedAt).toLocaleString()
     : "--";
 
+  const status =
+    document?.status || "Unknown";
+
+  const totalClaims =
+    claims?.length ||
+    statistics?.claimCount ||
+    0;
+
   return (
     <footer className="rounded-2xl border border-slate-200 bg-white px-6 py-4 shadow-sm">
       <div className="flex flex-col gap-4 text-sm text-slate-600 md:flex-row md:items-center md:justify-between">
-        {/* Left Section */}
         <div className="flex flex-wrap items-center gap-6">
           <div className="flex items-center gap-2">
             <CheckCircle2
@@ -21,8 +33,8 @@ export default function StatusBar({
 
             <span>
               Status:&nbsp;
-              <span className="font-medium text-slate-900">
-                {metadata?.status || "Unknown"}
+              <span className="font-medium capitalize text-slate-900">
+                {status}
               </span>
             </span>
           </div>
@@ -36,13 +48,12 @@ export default function StatusBar({
             <span>
               Claims:&nbsp;
               <span className="font-medium text-slate-900">
-                {metadata?.totalClaims ?? 0}
+                {totalClaims}
               </span>
             </span>
           </div>
         </div>
 
-        {/* Right Section */}
         <div className="flex items-center gap-2">
           <CalendarDays
             size={18}

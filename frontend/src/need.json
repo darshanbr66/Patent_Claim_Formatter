@@ -1,0 +1,51 @@
+{
+  "status": "success",
+  "document_type": "USPTO_XML",
+
+  "metadata": {
+   "title": "SYSTEM FOR SUPPORTING FARMING ACTIVITY DECISION-MAKING BASED ON ENVIRONMENTAL IMPACT ASSESSMENT",
+
+    "application_number": "17/123,456",
+    "application_date": "2021-05-18",
+
+    "publication_number": "US20230234567A1",
+    "publication_date": "2023-07-27",
+
+    "patent_number": "US11876543B2",
+
+    "kind_code": "A1",
+
+    "country": "US",
+    "language": "en"
+  },
+
+  "claims": [
+    {
+      "number": 1,
+      "claim_type": "INDEPENDENT",
+      "parent_claim": null,
+
+      "header": "A system comprising:",
+
+      "elements": [
+        {
+          "text": "...",
+          "level": 1,
+          "element_type": "BODY_ELEMENT",
+          "children": []
+        }
+      ],
+
+      "references": [
+        {
+          "text": "claim 1",
+          "claim_number": 1
+        }
+      ],
+
+      "metadata": {
+        "claim_category": "system"
+      }
+    }
+  ]
+}

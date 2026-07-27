@@ -1,0 +1,65 @@
+{
+  "status": "success",
+  "document_type": "USPTO_XML",
+  "claim_count": 14,
+  "independent_claims": 2,
+  "dependent_claims": 12,
+  "ocr_used": false,
+  "processing_time_ms": 145,
+  "confidence": 100,
+
+  "pdf_generated": true,
+  "pdf_path": "/tmp/claim_parser/outputs/Patent_xxx.pdf",
+
+  "download_url": null,
+  "download_endpoint": null,
+  "json_url": null,
+  "pdf_url": null,
+
+  "claims": [
+    {
+      "number": 1,
+      "claim_type": "INDEPENDENT",
+      "parent_claim": null,
+
+      "claim_text": "",
+
+      "header": "A system comprising:",
+
+      "elements": [
+        {
+          "text": "...",
+          "level": 1,
+          "marker": null,
+          "element_type": "BODY_ELEMENT",
+          "order": 0,
+          "children": []
+        }
+      ],
+
+      "metadata": {
+        "claim_category": "system",
+        "raw_xml": "..."
+      }
+    },
+
+    {
+      "number": 2,
+      "claim_type": "DEPENDENT",
+      "parent_claim": 1,
+
+      "claim_text": "",
+
+      "header": "The system according to claim 1...",
+
+      "elements": [],
+
+      "metadata": {
+        "claim_category": "system",
+        "raw_xml": "..."
+      }
+    }
+  ],
+
+  "metadata": {}
+}

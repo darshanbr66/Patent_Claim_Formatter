@@ -6,6 +6,8 @@ import UploadAnotherButton from "./UploadAnotherButton";
 export default function ViewerToolbar({
   document,
   metadata,
+  statistics,
+  claims,
   onUploadAnother,
   onDownload,
   zoom = 100,
@@ -16,13 +18,13 @@ export default function ViewerToolbar({
   return (
     <div className="rounded-xl border border-slate-200 bg-white px-5 py-4 shadow-sm">
       <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-        {/* Left */}
         <DocumentTitle
           document={document}
           metadata={metadata}
+          statistics={statistics}
+          claims={claims}
         />
 
-        {/* Right */}
         <div className="flex flex-wrap items-center justify-end gap-2">
           <ZoomControls
             value={zoom}
