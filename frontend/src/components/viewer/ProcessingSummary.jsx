@@ -1,72 +1,86 @@
 import {
-  CheckCircle2,
-  FileText,
-  Timer,
-  ShieldCheck,
+  FileCode2,
+  Hash,
+  CalendarDays,
+  BadgeCheck,
 } from "lucide-react";
 
 export default function ProcessingSummary({
   document,
-  statistics = {},
-  claims = [],
 }) {
-
-  const backend = document ?? {};
-
   const summaryItems = [
     {
-      id: "status",
-      title: "Status",
+      id: "type",
+      title: "Document Type",
       value:
-        document?.status
-          ? document.status.charAt(0).toUpperCase() + document.status.slice(1)
-          : "Unknown",
+        document?.type === "USPTO_XML"
+          ? "USPTO XML"
+          : document?.type ?? "—",
 
-      icon: CheckCircle2,
+      icon: FileCode2,
+      iconClass: "text-sky-600",
+      bgClass: "bg-sky-50",
+    },
+
+    {
+      id: "application",
+
+      title: "Application No.",
+
+      value:
+        document?.applicationNumber ??
+        "—",
+
+      icon: Hash,
       iconClass: "text-emerald-600",
       bgClass: "bg-emerald-50",
     },
 
     {
-      id: "claims",
-      title: "Claims",
+      id: "publication",
+
+      title: "Issued Date",
 
       value:
-        claims.length ||
-        statistics.claimCount ||
-        0,
+        document?.publicationDate ??
+        "—",
 
-      icon: FileText,
-      iconClass: "text-blue-600",
-      bgClass: "bg-blue-50",
-    },
-
-    {
-      id: "processing",
-
-      title: "Processing",
-
-      value:
-        statistics.processingTime != null
-          ? `${statistics.processingTime} ms`
-          : "--",
-
-      icon: Timer,
+      icon: CalendarDays,
       iconClass: "text-amber-600",
       bgClass: "bg-amber-50",
     },
 
     {
-      id: "confidence",
+      id: "patent",
 
-      title: "Confidence",
+      title: "Patent Number",
+      
+      // Plane Number
+      // value:
+      //   document?.patentNumber ??
+      //   "—",
 
-      value:
-        statistics.confidence != null
-          ? `${statistics.confidence}%`
-          : "--",
+      // Format Patent Number
+      value: (() => {
+        if (!document?.patentNumber) {
+          return "—";
+        }
 
-      icon: ShieldCheck,
+        const formattedNumber = Number(
+          document.patentNumber
+        ).toLocaleString("en-US");
+
+        return [
+          document.country,
+          formattedNumber,
+          document.kind,
+        ]
+          .filter(Boolean)
+          .join(" ");
+      })(),
+
+
+      icon: BadgeCheck,
       iconClass: "text-violet-600",
       bgClass: "bg-violet-50",
     },
@@ -99,7 +113,16 @@ export default function ProcessingSummary({
                   {item.title}
                 </p>
 
-                <p className="mt-1 text-2xl font-semibold leading-none text-slate-900">
+                <p
+                  className="
+                    mt-1
+                    truncate
+                    text-xl
+                    font-semibold
+                    text-slate-900
+                  "
+                  title={item.value}
+                >
                   {item.value}
                 </p>
               </div>

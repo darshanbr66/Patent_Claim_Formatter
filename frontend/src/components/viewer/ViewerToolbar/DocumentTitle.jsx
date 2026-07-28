@@ -55,34 +55,89 @@ export default function DocumentTitle({
     statistics?.claimCount ||
     0;
 
-  const documentType =
-    document?.type ||
-    "Patent Document";
+  const documentType = (() => {
+    const type = document?.type;
 
-  const processingText =
-    backendStatus.toLowerCase() === "success"
-      ? "Processed"
-      : backendStatus.toLowerCase() === "processing"
-      ? "Processing"
-      : backendStatus.toLowerCase() === "failed"
-      ? "Failed"
-      : "Not processed";
+    if (!type) {
+      return "Patent Document";
+    }
+
+    const displayMap = {
+      USPTO_XML: "USPTO XML",
+      USPTO_PDF: "USPTO PDF",
+      EPO_XML: "EPO XML",
+      WIPO_XML: "WIPO XML",
+    };
+
+    return displayMap[type] ?? type.replace(/_/g, " ");
+  })();
+
+  const formatDate = (value) => {
+      if (!value) {
+        return null;
+      }
+
+      const date = new Date(value);
+
+      if (Number.isNaN(date.getTime())) {
+        return value;
+      }
+
+      return new Intl.DateTimeFormat("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      }).format(date);
+    };
+
+    const publicationText = (() => {
+      const date = formatDate(document?.publicationDate);
+
+      if (!date) {
+        return null;
+      }
+
+      return document?.patentNumber
+        ? `Issued ${date}`
+        : `Published ${date}`;
+    })();
 
   return (
-    <div className="min-w-0">
-      <div className="flex flex-wrap items-center gap-2">
-        <h1 className="truncate text-2xl font-semibold leading-none tracking-tight text-slate-900">
+    <div className="min-w-0 flex-1">
+      <div className="flex flex-wrap items-start gap-2">
+        <h1
+          className="
+            text-2xl
+            font-semibold
+            leading-tight
+            tracking-tight
+            text-slate-900
+            break-words
+            whitespace-normal
+            flex-1
+          "
+        >
           {title}
         </h1>
 
         <span
-          className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-[11px] font-semibold ${status.badge}`}
+          className={`inline-flex shrink-0 items-center rounded-full px-2.5 py-0.5 text-[11px] font-semibold ${status.badge}`}
         >
           {status.label}
         </span>
       </div>
 
-      <div className="mt-1 flex flex-wrap items-center gap-1.5 text-xs text-slate-500">
+      <div
+        className="
+          mt-2
+          flex
+          flex-wrap
+          items-center
+          gap-1.5
+          text-xs
+          text-slate-500
+        "
+      >
         <span>{claimCount} Claims</span>
 
         <span>•</span>
@@ -91,7 +146,7 @@ export default function DocumentTitle({
 
         <span>•</span>
 
-        <span>{processingText}</span>
+        <span>{publicationText ?? "Publication Date —"}</span>
       </div>
     </div>
   );

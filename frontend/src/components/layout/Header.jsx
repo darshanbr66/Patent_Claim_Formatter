@@ -9,7 +9,7 @@ export default function Header() {
 
           <div>
             <h1 className="text-lg font-semibold tracking-tight text-slate-900">
-              Patent Claim Formatter
+              AI Patent Claim Formatter
             </h1>
 
             <p className="text-xs text-slate-500">

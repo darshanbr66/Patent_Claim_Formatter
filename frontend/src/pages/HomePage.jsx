@@ -11,7 +11,7 @@ export default function HomePage() {
           </span>
 
           <h1 className="mt-6 text-5xl font-bold tracking-tight text-slate-900">
-            Patent Claim Formatter
+            AI Patent Claim Formatter
           </h1>
 
           <p className="mx-auto mt-6 max-w-3xl text-lg leading-8 text-slate-600">

@@ -15,14 +15,12 @@ export default function AppLayout({ children }) {
 
       <main
         className="
-          mx-auto
           flex
           w-full
-          max-w-7xl
           flex-1
           min-h-0
           px-6
-          py-10
+          py-8
           lg:px-8
         "
       >
