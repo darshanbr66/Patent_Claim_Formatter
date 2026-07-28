@@ -7,33 +7,16 @@ export default function ClaimReference({ reference }) {
   const label = reference.text ?? `claim ${claimNumber}`;
 
   function handleClick() {
-    if (!claimNumber) return;
-
-    const element = document.getElementById(
-      `claim-${claimNumber}`
-    );
-
-    if (!element) return;
-
-    element.scrollIntoView({
-      behavior: "smooth",
-      block: "center",
-    });
-
-    element.classList.add(
-      "ring-2",
-      "ring-blue-300",
-      "rounded"
-    );
-
-    setTimeout(() => {
-      element.classList.remove(
-        "ring-2",
-        "ring-blue-300",
-        "rounded"
-      );
-    }, 1200);
+  if (!claimNumber) {
+    return;
   }
+
+  window.dispatchEvent(
+    new CustomEvent("claim:navigate", {
+      detail: claimNumber,
+    })
+  );
+}
 
   return (
     <button

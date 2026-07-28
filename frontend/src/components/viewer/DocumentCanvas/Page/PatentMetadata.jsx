@@ -1,8 +1,6 @@
 export default function PatentMetadata({ document }) {
   if (!document) return null;
 
-  console.log("Patent Metadata:", document);
-
   const getValue = (value) => {
     if (
       value === undefined ||
@@ -16,56 +14,43 @@ export default function PatentMetadata({ document }) {
   };
 
   const getDocumentType = (type) => {
-  switch (type) {
-    case "USPTO_XML":
-      return "USPTO XML";
-
-    case "USPTO_PDF":
-      return "USPTO PDF";
-
-    case "EPO_XML":
-      return "EPO XML";
-
-    case "WIPO_XML":
-      return "WIPO XML";
-
-    default:
-      return type || "—";
-  }
-};
+    switch (type) {
+      case "USPTO_XML":
+        return "USPTO XML";
+      case "USPTO_PDF":
+        return "USPTO PDF";
+      case "EPO_XML":
+        return "EPO XML";
+      case "WIPO_XML":
+        return "WIPO XML";
+      default:
+        return type || "—";
+    }
+  };
 
   const rows = [
     ["Document Type", getDocumentType(document.type)],
-    // ["Processing Status", document.status],
-
     ["Application No.", document.applicationNumber],
     ["Application Date", document.applicationDate],
-
-    // ["Publication No.", document.publicationNumber],
     ["Publication Date", document.publicationDate],
-
     ["Patent Number", document.patentNumber],
-
     ["Kind Code", document.kind],
-
     ["Language", document.language],
   ];
 
   return (
-    <section className="mt-10 mb-14">
+    <section className="mt-7 mb-6">
       <div
         className="
           grid
-          grid-cols-[190px_1fr]
-          gap-y-3
-          text-[15px]
+          grid-cols-[170px_1fr]
+          gap-y-2
+          text-[14px]
+          leading-6
         "
       >
         {rows.map(([label, value]) => (
-          <div
-            key={label}
-            className="contents"
-          >
+          <div key={label} className="contents">
             <div
               className="
                 font-semibold
@@ -82,7 +67,7 @@ export default function PatentMetadata({ document }) {
         ))}
       </div>
 
-      <div className="mt-8 border-b border-slate-300" />
+      <div className="mt-5 border-b border-slate-300" />
     </section>
   );
 }

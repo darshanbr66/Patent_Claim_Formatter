@@ -19,26 +19,28 @@ export default function ClaimBlock({
       id={`claim-${claim.number}`}
       className={`
         scroll-mt-24
-        py-5
-        first:pt-0
-        transition-all
-        duration-300
-        rounded-lg
+        transition-colors
+        duration-200
         ${
           selected
-            ? "bg-blue-50 border-l-4 border-blue-500 shadow-sm px-3"
-            : "border-l-4 border-transparent px-3"
+            ? "bg-blue-50/60"
+            : ""
         }
       `}
     >
-      <div className="flex items-start">
+      <div
+        className="
+          flex
+          items-start
+          gap-2
+        "
+      >
         {/* Claim Number */}
         <div
           className="
-            w-7
+            w-8
             shrink-0
-            pr-1
-            pt-[2px]
+            pt-[1px]
             text-right
             select-none
           "
@@ -46,8 +48,13 @@ export default function ClaimBlock({
           <ClaimNumber number={claim.number} />
         </div>
 
-        {/* Claim Body */}
-        <div className="min-w-0 flex-1">
+        {/* Claim Content */}
+        <div
+          className="
+            min-w-0
+            flex-1
+          "
+        >
           {isBackendClaim ? (
             <BackendClaimRenderer
               claim={claim}

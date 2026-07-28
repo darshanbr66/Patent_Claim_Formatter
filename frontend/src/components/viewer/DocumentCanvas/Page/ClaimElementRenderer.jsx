@@ -20,63 +20,56 @@ export default function ClaimElementRenderer({
 
   return (
     <ClaimLimitation level={element.level ?? 0}>
-      <div
+      <p
         className="
-          mt-1
-          first:mt-0
-          whitespace-pre-wrap
+          mt-[2px]
+          mb-[2px]
+          whitespace-normal
           break-words
+          text-justify
+          font-serif
+          text-[13.5px]
+          font-normal
+          leading-[1.5]
+
+          pl-[18px]
+          -indent-[10px]
         "
       >
-        <div className="flex items-start">
-          {element.marker && (
-            <span
+        {element.marker && (
+          <span className="font-medium text-slate-800">
+            {element.marker}{" "}
+          </span>
+        )}
+
+        {parts.map((part, index) =>
+          part.highlighted ? (
+            <mark
+              key={index}
               className="
-                mr-2
-                min-w-[28px]
-                shrink-0
-                font-semibold
-                text-slate-700
+                rounded
+                bg-yellow-200
+                px-[1px]
               "
             >
-              {element.marker}
+              {part.text}
+            </mark>
+          ) : (
+            <span key={index}>
+              {part.text}
             </span>
-          )}
-
-          <span className="flex-1 font-normal">
-            {parts.map((part, index) =>
-              part.highlighted ? (
-                <mark
-                  key={index}
-                  className="
-                    rounded
-                    bg-yellow-200
-                    px-[1px]
-                  "
-                >
-                  {part.text}
-                </mark>
-              ) : (
-                <span key={index}>
-                  {part.text}
-                </span>
-              )
-            )}
-          </span>
-        </div>
-
-        {hasChildren && (
-          <div className="mt-0.5">
-            {element.children.map((child) => (
-              <ClaimElementRenderer
-                key={child.id}
-                element={child}
-                viewerState={viewerState}
-              />
-            ))}
-          </div>
+          )
         )}
-      </div>
+      </p>
+
+      {hasChildren &&
+        element.children.map((child) => (
+          <ClaimElementRenderer
+            key={child.id}
+            element={child}
+            viewerState={viewerState}
+          />
+        ))}
     </ClaimLimitation>
   );
 }

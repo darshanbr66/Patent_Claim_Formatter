@@ -1,0 +1,52 @@
+	We claim:
+	1. A computing system comprising:
+	a processor; and
+	a memory having a set of instructions, which when
+		executed by the processor, cause the computing system
+		to:
+	provide first content to a first computing device to be
+		presented on the first computing device as part of a
+		telecommunication session associated with a first user;
+	receive telecommunication data from the first computing
+		device as part of the telecommunication session;
+	identify a user characteristic of the first user based on the
+		telecommunication data, wherein the user characteris-
+		tic is associated with the first content presented on the
+		first computing device, wherein the user characteristic
+		is one or more of a physical characteristic of the first
+		user or an audio characteristic of the first user;
+	measure an emotional response of the first user based on
+		the user characteristic;
+	automatically adjust a parameter of the telecommunica-
+		tion session based on the emotional response;
+	identify a category of the first content;
+	determine a level of understanding of the category by the
+		first user:
+	determine one or more of second content to be presented
+		to the first user based on the level of understanding and
+		the user characteristic, or third content to be presented
+		to a second user associated with the telecommunication
+		session based on the level of understanding and the user
+		characteristic: and
+	provide one or more of the second content to the first
+		computing device, or the third content to a second
+		computing device associated with the second user.
+	2. The computing system of claim 1, wherein to adjust the
+parameter of the telecommunication session, the instructions
+of the memory, when executed, cause the computing system
+to:
+	one or more of provide a first overlay on a first graphical
+		user interface of the first computing device that corre-
+		sponds to the second content, or provide a second
+		overlay on a second graphical user interface of the
+		second computing device that corresponds to the third
+		content.
+	3. The computing system of claim 1, wherein the instruc-
+tions of the memory, when executed, cause the computing
+system to:
+	generate the first content with an artificial intelligence
+		model;
+	generate, with the artificial intelligence model, an output
+		based on the emotional response; and 65
+	cause the output to be presented on the first computing
+		device during the telecommunication session.

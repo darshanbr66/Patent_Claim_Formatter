@@ -22,15 +22,16 @@ export default function PatentHeader({ document }) {
     .join(" ");
 
   return (
-    <header className="border-b border-slate-300 pb-10">
+    <header className="border-b border-slate-300 pb-6">
       <div className="flex items-start justify-between">
         <div>
           <div
             className="
-              text-[34px]
-              font-bold
+              text-[28px]
+              font-semibold
               tracking-tight
               text-slate-900
+              leading-none
             "
           >
             {patentNumber || getValue(document.type)}
@@ -38,11 +39,11 @@ export default function PatentHeader({ document }) {
 
           <div
             className="
-              mt-2
-              text-[13px]
+              mt-1
+              text-[11px]
               font-medium
               uppercase
-              tracking-[0.28em]
+              tracking-[0.22em]
               text-slate-500
             "
           >
@@ -55,10 +56,10 @@ export default function PatentHeader({ document }) {
         <div className="text-right">
           <div
             className="
-              text-[13px]
+              text-[11px]
               font-medium
               uppercase
-              tracking-[0.18em]
+              tracking-[0.15em]
               text-slate-500
             "
           >
@@ -69,12 +70,13 @@ export default function PatentHeader({ document }) {
 
       <h1
         className="
-          mt-12
+          mt-6
           text-center
           font-serif
-          text-[32px]
-          font-bold
-          leading-[1.3]
+          text-[26px]
+          font-semibold
+          leading-[1.28]
+          tracking-tight
           text-slate-900
         "
       >

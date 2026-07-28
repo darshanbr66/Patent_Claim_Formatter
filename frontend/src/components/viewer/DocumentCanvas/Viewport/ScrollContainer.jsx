@@ -8,7 +8,7 @@ export default function ScrollContainer({ children }) {
         flex-1
         flex-col
         overflow-hidden
-        rounded-2xl
+        rounded-xl
         border
         border-slate-200
         bg-slate-100
@@ -29,8 +29,8 @@ export default function ScrollContainer({ children }) {
             flex
             min-h-full
             justify-center
-            px-10
-            py-10
+            px-6
+            py-8
           "
         >
           {children}

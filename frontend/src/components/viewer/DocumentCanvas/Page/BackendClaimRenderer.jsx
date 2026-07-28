@@ -1,7 +1,6 @@
 import ClaimElementRenderer from "./ClaimElementRenderer";
 import renderInlineContent from "./renderInlineContent";
 
-
 export default function BackendClaimRenderer({
   claim,
   viewerState,
@@ -10,23 +9,25 @@ export default function BackendClaimRenderer({
 
   const searchTerm = viewerState?.searchTerm ?? "";
 
-  
-
   return (
     <div
       className="
         font-serif
+        text-[13.5px]
         font-normal
-        text-[15px]
-        leading-[1.7]
+        leading-[1.52]
+        tracking-[0.005em]
         text-slate-900
       "
     >
       {claim.header && (
-        <div
+        <p
           className="
-            whitespace-pre-wrap
+            mb-[6px]
+            whitespace-normal
             break-words
+            leading-[1.5]
+            text-justify
           "
         >
           {renderInlineContent({
@@ -34,7 +35,7 @@ export default function BackendClaimRenderer({
             references: claim.references,
             searchTerm,
           })}
-        </div>
+        </p>
       )}
 
       {claim.elements?.map((element) => (
