@@ -23,7 +23,8 @@ export default function BackendClaimRenderer({
       {claim.header && (
         <p
           className="
-            mb-[6px]
+            mt-0
+            mb-[1px]
             whitespace-normal
             break-words
             leading-[1.5]

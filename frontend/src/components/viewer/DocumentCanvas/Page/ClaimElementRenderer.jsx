@@ -22,8 +22,8 @@ export default function ClaimElementRenderer({
     <ClaimLimitation level={element.level ?? 0}>
       <p
         className="
-          mt-[2px]
-          mb-[2px]
+          mt-[0px]
+          mb-[0px]
           whitespace-normal
           break-words
           text-justify

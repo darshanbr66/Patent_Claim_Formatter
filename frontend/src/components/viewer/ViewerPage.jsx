@@ -86,12 +86,14 @@ export default function ViewerPage() {
 
   return (
     <section
-      className={`
-        flex
-        flex-col
-        ${collapsed ? "gap-0" : "gap-4"}
-      `}
-    >
+  className={`
+    flex
+    w-full
+    min-w-0
+    flex-col
+    ${collapsed ? "gap-0" : "gap-4"}
+  `}
+>
 
       <div
         ref={topSectionRef}

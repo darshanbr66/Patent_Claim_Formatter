@@ -7,6 +7,7 @@ export default function ClaimNumber({ number }) {
         font-serif
         text-[13.5px]
         leading-[1.5]
+        font-semibold
         font-normal
         tabular-nums
         text-slate-900

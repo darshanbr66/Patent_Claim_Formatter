@@ -18,6 +18,7 @@ export default function ClaimBlock({
     <section
       id={`claim-${claim.number}`}
       className={`
+        mt-1
         scroll-mt-24
         transition-colors
         duration-200
@@ -40,7 +41,7 @@ export default function ClaimBlock({
           className="
             w-8
             shrink-0
-            pt-[1px]
+            pt-[0px]
             text-right
             select-none
           "

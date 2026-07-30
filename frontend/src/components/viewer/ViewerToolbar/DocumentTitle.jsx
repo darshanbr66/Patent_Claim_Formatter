@@ -103,12 +103,10 @@ export default function DocumentTitle({
     })();
 
   return (
-    <div className="min-w-0 flex-1 lg:min-h-[72px]">
+    <div className="min-w-0 flex-1">
       <div className="flex flex-wrap items-start gap-2">
         <h1
           className="
-            flex-1
-            min-h-[60px]
             text-2xl
             font-semibold
             leading-tight
