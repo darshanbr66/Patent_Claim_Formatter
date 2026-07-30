@@ -23,34 +23,6 @@ export default function ProcessingSummary({
     },
 
     {
-      id: "application",
-
-      title: "Application No.",
-
-      value:
-        document?.applicationNumber ??
-        "—",
-
-      icon: Hash,
-      iconClass: "text-emerald-600",
-      bgClass: "bg-emerald-50",
-    },
-
-    {
-      id: "publication",
-
-      title: "Issued Date",
-
-      value:
-        document?.publicationDate ??
-        "—",
-
-      icon: CalendarDays,
-      iconClass: "text-amber-600",
-      bgClass: "bg-amber-50",
-    },
-
-    {
       id: "patent",
 
       title: "Patent Number",
@@ -84,6 +56,36 @@ export default function ProcessingSummary({
       iconClass: "text-violet-600",
       bgClass: "bg-violet-50",
     },
+
+
+    {
+      id: "publication",
+
+      title: "Granted Date",
+
+      value:
+        document?.publicationDate ??
+        "—",
+
+      icon: CalendarDays,
+      iconClass: "text-amber-600",
+      bgClass: "bg-amber-50",
+    },
+
+    {
+      id: "application",
+
+      title: "Application No.",
+
+      value:
+        document?.applicationNumber ??
+        "—",
+
+      icon: Hash,
+      iconClass: "text-emerald-600",
+      bgClass: "bg-emerald-50",
+    },
+    
   ];
 
   return (

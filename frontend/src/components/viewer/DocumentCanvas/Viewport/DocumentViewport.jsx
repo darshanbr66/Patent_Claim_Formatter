@@ -10,10 +10,11 @@ export default function DocumentViewport({
   searchTerm,
   searchResults,
   selectedClaimId,
+  onScroll,
 }) {
   return (
     <div className="flex h-full min-h-0 flex-1 flex-col">
-      <ScrollContainer>
+      <ScrollContainer onScroll={onScroll}>
         {!document ? (
           <div className="py-16 text-center text-slate-500">
             No document loaded.

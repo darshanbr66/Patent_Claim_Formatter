@@ -16,6 +16,7 @@ export default function DocumentCanvas({
   searchTerm,
   onSearchChange,
   searchResults,
+  onScroll,
 }) {
   /*
    * Selected by clicking in the sidebar.
@@ -140,6 +141,7 @@ export default function DocumentCanvas({
           searchTerm={searchTerm}
           searchResults={searchResults}
           selectedClaimId={selectedClaimId}
+          onScroll={onScroll}
         />
       </div>
     </section>

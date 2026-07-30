@@ -20,7 +20,7 @@ export default function AppLayout({ children }) {
           flex-1
           min-h-0
           px-6
-          py-8
+          py-2
           lg:px-8
         "
       >

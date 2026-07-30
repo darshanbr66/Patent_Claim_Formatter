@@ -1,4 +1,15 @@
-export default function ScrollContainer({ children }) {
+import { useRef } from "react";
+
+export default function ScrollContainer({
+  children,
+  onScroll,
+}) {
+  const scrollRef = useRef(null);
+
+  const handleScroll = (event) => {
+    onScroll?.(event.target.scrollTop);
+  };
+
   return (
     <div
       className="
@@ -16,6 +27,8 @@ export default function ScrollContainer({ children }) {
       "
     >
       <div
+        ref={scrollRef}
+        onScroll={handleScroll}
         className="
           viewer-scrollbar
           flex-1
@@ -33,7 +46,9 @@ export default function ScrollContainer({ children }) {
             py-8
           "
         >
-          {children}
+          <div className="w-full max-w-[210mm]">
+            {children}
+          </div>
         </div>
       </div>
     </div>

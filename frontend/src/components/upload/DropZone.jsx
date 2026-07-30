@@ -118,7 +118,7 @@ export default function DropZone({
           Browse Files
         </button>
 
-        <div className="mt-6 flex flex-wrap justify-center gap-2">
+        {/* <div className="mt-6 flex flex-wrap justify-center gap-2">
           {["XML", "PDF", "TXT", "DOCX"].map((type) => (
             <span
               key={type}
@@ -137,7 +137,7 @@ export default function DropZone({
               {type}
             </span>
           ))}
-        </div>
+        </div> */}
       </div>
     </>
   );

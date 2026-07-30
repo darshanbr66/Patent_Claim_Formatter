@@ -1,4 +1,5 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+
 import { useNavigate } from "react-router-dom";
 
 import { useDocument } from "../../context/DocumentContext";
@@ -14,6 +15,9 @@ import { exportDocx } from "../../services/export";
 export default function ViewerPage() {
  
   const navigate = useNavigate();
+  const [collapsed, setCollapsed] = useState(false);
+  const topSectionRef = useRef(null);
+  const [topSectionHeight, setTopSectionHeight] = useState(0);
 
   const {
     documentState,
@@ -31,6 +35,21 @@ export default function ViewerPage() {
       navigate("/", { replace: true });
     }
   }, [result, navigate]);
+
+  useEffect(() => {
+    if (!topSectionRef.current) return;
+
+    const updateHeight = () => {
+      setTopSectionHeight(topSectionRef.current.offsetHeight);
+    };
+
+    updateHeight();
+
+    const observer = new ResizeObserver(updateHeight);
+    observer.observe(topSectionRef.current);
+
+    return () => observer.disconnect();
+  }, []);
 
   const formattedPatent = useMemo(() => {
     return result ? formatPatent(result) : null;
@@ -58,41 +77,67 @@ export default function ViewerPage() {
     console.info("Selected zoom:", zoom);
   };
 
-   console.log("Backend result:", result);
-console.log("Statistics:", formattedPatent.statistics);
+  //  console.log("Backend result:", result);
+  //  console.log("Statistics:", formattedPatent.statistics);
+
+  const handleDocumentScroll = (scrollTop) => {
+    setCollapsed(scrollTop > 20);
+  };
 
   return (
     <section
-      className="
+      className={`
         flex
         flex-col
-        gap-4
-      "
+        ${collapsed ? "gap-0" : "gap-4"}
+      `}
     >
-      <ViewerToolbar
-        document={formattedPatent.document}
-        metadata={formattedPatent.metadata}
-        statistics={formattedPatent.statistics}
-        claims={formattedPatent.claims}
-        onUploadAnother={handleUploadAnother}
-        onDownload={handleDownload}
-        zoom={100}
-        onZoomChange={handleZoomChange}
-        downloadDisabled={false}
-        zoomDisabled
-      />
-      <ProcessingSummary
-          document={formattedPatent.document}
-          statistics={formattedPatent.statistics}
-          claims={formattedPatent.claims}
-          metadata={formattedPatent.metadata}
-      />
 
       <div
-        className="
-          h-[calc(100vh-230px)]
-          min-h-[650px]
+        ref={topSectionRef}
+        className={`
           overflow-hidden
+          transition-[max-height,opacity]
+          duration-300
+          ease-in-out
+          ${collapsed ? "max-h-0 opacity-0" : "max-h-[600px] opacity-100"}
+        `}
+      >
+        <ViewerToolbar
+          document={formattedPatent.document}
+          metadata={formattedPatent.metadata}
+          statistics={formattedPatent.statistics}
+          claims={formattedPatent.claims}
+          onUploadAnother={handleUploadAnother}
+          onDownload={handleDownload}
+          zoom={100}
+          onZoomChange={handleZoomChange}
+          downloadDisabled={false}
+          zoomDisabled
+        />
+
+        <div className="mt-4">
+          <ProcessingSummary
+            document={formattedPatent.document}
+            statistics={formattedPatent.statistics}
+            claims={formattedPatent.claims}
+            metadata={formattedPatent.metadata}
+          />
+        </div>
+      </div>
+
+      <div
+        style={{
+          height: collapsed
+            ? "calc(100vh - 64px)"
+            : `calc(100vh - ${64 + topSectionHeight}px)`,
+        }}
+        className="
+          mt-0
+          overflow-hidden
+          transition-[height]
+          duration-300
+          ease-in-out
         "
       >
         <DocumentCanvas
@@ -100,16 +145,10 @@ console.log("Statistics:", formattedPatent.statistics);
           searchTerm={searchTerm}
           onSearchChange={setSearchTerm}
           searchResults={searchResults}
+          onScroll={handleDocumentScroll}
         />
       </div>
 
-      <div className="pt-4">
-        <StatusBar
-          document={formattedPatent.document}
-          statistics={formattedPatent.statistics}
-          claims={formattedPatent.claims}
-        />
-      </div>
     </section>
   );
 }
