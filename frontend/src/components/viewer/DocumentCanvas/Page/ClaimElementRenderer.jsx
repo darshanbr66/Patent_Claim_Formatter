@@ -1,5 +1,6 @@
 import ClaimLimitation from "./ClaimLimitation";
 import highlightText from "../../../../services/search/highlightText";
+import renderInlineHtml from "../../../../utils/renderInlineHtml";
 
 export default function ClaimElementRenderer({
   element,
@@ -52,11 +53,11 @@ export default function ClaimElementRenderer({
                 px-[1px]
               "
             >
-              {part.text}
+              {renderInlineHtml(part.text)}
             </mark>
           ) : (
             <span key={index}>
-              {part.text}
+              {renderInlineHtml(part.text)}
             </span>
           )
         )}

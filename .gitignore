@@ -42,3 +42,7 @@ temp/
 
 # Misc
 *.local
+
+# Testing Files
+testing_files/
+XML/
