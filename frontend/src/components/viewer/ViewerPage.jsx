@@ -10,7 +10,7 @@ import ViewerToolbar from "./ViewerToolbar/ViewerToolbar";
 import ProcessingSummary from "./ProcessingSummary";
 import DocumentCanvas from "./DocumentCanvas/DocumentCanvas";
 import StatusBar from "./StatusBar";
-import { exportDocx } from "../../services/export";
+import { downloadPatentPdf } from "../../api/patentApi";
 
 export default function ViewerPage() {
  
@@ -18,6 +18,7 @@ export default function ViewerPage() {
   const [collapsed, setCollapsed] = useState(false);
   const topSectionRef = useRef(null);
   const [topSectionHeight, setTopSectionHeight] = useState(0);
+  const [downloading, setDownloading] = useState(false);
 
   const {
     documentState,
@@ -65,13 +66,53 @@ export default function ViewerPage() {
   };
 
   const handleDownload = async () => {
-    try {
-      await exportDocx(formattedPatent);
-    } catch (error) {
-      console.error(error);
-      alert("Failed to export DOCX.");
+  try {
+    setDownloading(true);
+    // XML file uploaded by the user
+    const xmlFile = documentState.file;
+
+    if (!xmlFile) {
+      alert("No XML file found.");
+      return;
     }
-  };
+
+    const response = await downloadPatentPdf(xmlFile);
+
+    const url = window.URL.createObjectURL(response.data);
+
+    const link = document.createElement("a");
+
+    // Default filename
+    let filename = "Patent.pdf";
+
+    // Read filename from Content-Disposition header
+    const disposition = response.headers["content-disposition"];
+
+    if (disposition) {
+      const match =
+        disposition.match(/filename\*?=(?:UTF-8'')?"?([^";]+)"?/);
+
+      if (match?.[1]) {
+        filename = decodeURIComponent(match[1]);
+      }
+    }
+
+    link.href = url;
+    link.download = filename;
+
+    document.body.appendChild(link);
+    link.click();
+
+    document.body.removeChild(link);
+
+    window.URL.revokeObjectURL(url);
+  } catch (error) {
+    console.error(error);
+    alert("Failed to download PDF.");
+  }finally {
+    setDownloading(false);
+  }
+};
 
   const handleZoomChange = (zoom) => {
     console.info("Selected zoom:", zoom);
@@ -115,6 +156,7 @@ export default function ViewerPage() {
           zoom={100}
           onZoomChange={handleZoomChange}
           downloadDisabled={false}
+          downloadLoading={downloading}
           zoomDisabled
         />
 

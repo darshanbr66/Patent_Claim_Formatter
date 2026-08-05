@@ -14,6 +14,7 @@ export default function ViewerToolbar({
   onZoomChange,
   downloadDisabled = true,
   zoomDisabled = true,
+  downloadLoading = false,
 }) {
   return (
     <div className="rounded-xl border border-slate-200 bg-white px-5 py-4 shadow-sm">
@@ -34,6 +35,7 @@ export default function ViewerToolbar({
 
           <DownloadMenu
             disabled={downloadDisabled}
+            loading={downloadLoading}
             onDownload={onDownload}
           />
 

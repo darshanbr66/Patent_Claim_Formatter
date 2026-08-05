@@ -24,6 +24,31 @@ export async function parsePatent(file) {
   return response.data;
 }
 
+
+/**
+ * Parse patent document and download generated PDF.
+ *
+ * @param {File} file
+ * @returns {Promise<AxiosResponse<Blob>>}
+ */
+export async function downloadPatentPdf(file) {
+  const formData = new FormData();
+
+  formData.append("file", file);
+
+  return apiClient.post(
+    "/api/v1/parse/pdf",
+    formData,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+      responseType: "blob",
+    }
+  );
+}
+
+
 /**
  * Health check.
  *
