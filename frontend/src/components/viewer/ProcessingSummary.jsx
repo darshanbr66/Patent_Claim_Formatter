@@ -38,13 +38,9 @@ export default function ProcessingSummary({
           return "—";
         }
 
-        const formattedNumber = Number(
-          document.patentNumber
-        ).toLocaleString("en-US");
-
         return [
           document.country,
-          formattedNumber,
+          document.patentNumber,
           document.kind,
         ]
           .filter(Boolean)
