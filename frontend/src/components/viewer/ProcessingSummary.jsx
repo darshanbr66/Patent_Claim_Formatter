@@ -3,39 +3,20 @@ import {
   Hash,
   CalendarDays,
   BadgeCheck,
+  Info,
 } from "lucide-react";
 
 export default function ProcessingSummary({
   document,
 }) {
-  const summaryItems = [
-    {
-      id: "type",
-      title: "Document Type",
-      value:
-        document?.type === "USPTO_XML"
-          ? "USPTO XML"
-          : document?.type ?? "—",
 
-      icon: FileCode2,
-      iconClass: "text-sky-600",
-      bgClass: "bg-sky-50",
-    },
-
+  const metadataItems = [
     {
       id: "patent",
-
       title: "Patent Number",
-      
-      // Plane Number
-      // value:
-      //   document?.patentNumber ??
-      //   "—",
-
-      // Format Patent Number
       value: (() => {
         if (!document?.patentNumber) {
-          return "—";
+          return null;
         }
 
         return [
@@ -47,21 +28,15 @@ export default function ProcessingSummary({
           .join(" ");
       })(),
 
-
       icon: BadgeCheck,
       iconClass: "text-violet-600",
       bgClass: "bg-violet-50",
     },
 
-
     {
       id: "publication",
-
       title: "Granted Date",
-
-      value:
-        document?.publicationDate ??
-        "—",
+      value: document?.publicationDate ?? null,
 
       icon: CalendarDays,
       iconClass: "text-amber-600",
@@ -70,22 +45,54 @@ export default function ProcessingSummary({
 
     {
       id: "application",
-
       title: "Application No.",
-
-      value:
-        document?.applicationNumber ??
-        "—",
+      value: document?.applicationNumber ?? null,
 
       icon: Hash,
       iconClass: "text-emerald-600",
       bgClass: "bg-emerald-50",
     },
-    
   ];
 
+  const availableMetadata = metadataItems.filter(
+    (item) => item.value
+  );
+
+  const missingMetadata = metadataItems.filter(
+    (item) => !item.value
+  );
+
+const summaryItems = [
+  {
+    id: "type",
+    title: "Document Type",
+    value:
+      document?.type === "USPTO_XML"
+        ? "USPTO XML"
+        : document?.type ?? "—",
+
+    icon: FileCode2,
+    iconClass: "text-sky-600",
+    bgClass: "bg-sky-50",
+  },
+
+  ...availableMetadata,
+];
+
+const gridClass =
+  summaryItems.length === 1
+    ? "md:grid-cols-1"
+    : summaryItems.length === 2
+    ? "md:grid-cols-2"
+    : summaryItems.length === 3
+    ? "md:grid-cols-3"
+    : "md:grid-cols-2 xl:grid-cols-4";
+
   return (
-    <section className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+  <section className="space-y-3">
+    <div
+      className={`grid gap-3 ${gridClass}`}
+    >
       {summaryItems.map((item) => {
         const Icon = item.icon;
 
@@ -137,6 +144,36 @@ export default function ProcessingSummary({
           </div>
         );
       })}
-    </section>
-  );
+    </div>
+
+    {missingMetadata.length > 0 && (
+      <div
+        className="
+          rounded-xl
+          border
+          border-blue-200
+          bg-blue-50
+          px-5
+          py-4
+        "
+      >
+        <div className="flex items-center gap-2">
+          <Info size={18} className="text-blue-600" />
+
+          <h3 className="text-sm font-semibold text-blue-900">
+            Partial document metadata
+          </h3>
+        </div>
+
+        <p className="mt-1 text-sm leading-6 text-blue-800">
+          The uploaded document does not contain the following metadata:
+          <span className="font-medium">
+            {" "}
+            {missingMetadata.map(item => item.title).join(", ")}
+          </span>.
+        </p>
+      </div>
+    )}
+  </section>
+);
 }

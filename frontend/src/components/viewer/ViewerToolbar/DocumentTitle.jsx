@@ -143,9 +143,13 @@ export default function DocumentTitle({
 
         <span>{documentType}</span>
 
-        <span>•</span>
+        {publicationText && (
+          <>
+            <span>•</span>
 
-        <span>{publicationText ?? "Publication Date —"}</span>
+            <span>{publicationText}</span>
+          </>
+        )}
       </div>
     </div>
   );
