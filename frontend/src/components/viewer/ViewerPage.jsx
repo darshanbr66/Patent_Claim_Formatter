@@ -12,6 +12,11 @@ import DocumentCanvas from "./DocumentCanvas/DocumentCanvas";
 import StatusBar from "./StatusBar";
 import { downloadPatentPdf } from "../../api/patentApi";
 
+import {
+  getFile,
+  clearFile,
+} from "../../utils/fileStorage";
+
 export default function ViewerPage() {
  
   const navigate = useNavigate();
@@ -22,6 +27,7 @@ export default function ViewerPage() {
 
   const {
     documentState,
+    setDocumentState,
     resetDocument,
 
     searchTerm,
@@ -32,10 +38,42 @@ export default function ViewerPage() {
   const { result } = documentState;
 
   useEffect(() => {
-    if (!result) {
-      navigate("/", { replace: true });
+    async function restore() {
+      if (result) {
+        return;
+      }
+
+      const cachedPatent =
+        sessionStorage.getItem("parsedPatent");
+
+      if (!cachedPatent) {
+        navigate("/", { replace: true });
+        return;
+      }
+
+      try {
+        const parsedPatent = JSON.parse(cachedPatent);
+
+        const restoredFile = await getFile();
+
+        setDocumentState((prev) => ({
+          ...prev,
+          file: restoredFile,
+          result: parsedPatent,
+          processingStatus: "completed",
+          progress: 100,
+        }));
+      } catch (error) {
+        console.error(error);
+
+        sessionStorage.removeItem("parsedPatent");
+
+        navigate("/", { replace: true });
+      }
     }
-  }, [result, navigate]);
+
+    restore();
+  }, [result, navigate, setDocumentState]);
 
   useEffect(() => {
     if (!topSectionRef.current) return;
@@ -60,8 +98,13 @@ export default function ViewerPage() {
     return null;
   }
 
-  const handleUploadAnother = () => {
+  const handleUploadAnother = async () => {
+    await clearFile();
+
+    sessionStorage.removeItem("parsedPatent");
+
     resetDocument();
+
     navigate("/", { replace: true });
   };
 

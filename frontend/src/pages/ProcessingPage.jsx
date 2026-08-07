@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useDocument } from "../context/DocumentContext";
 import { parsePatent } from "../api/patentApi";
 import formatBackendPatent from "../services/adapters/formatBackendPatent";
+import { saveFile } from "../utils/fileStorage";
 
 const PROCESSING_STAGES = [
   {
@@ -66,14 +67,24 @@ export default function ProcessingPage() {
           );
         }
 
+
         const backendResponse = await parsePatent(
           documentState.file
         );
         // console.log("Backend Response:", backendResponse);
+        
+        await saveFile(documentState.file);
 
         const patent = formatBackendPatent(
           backendResponse
         );
+
+        sessionStorage.setItem(
+          "parsedPatent",
+          JSON.stringify(patent)
+        );
+
+        
         // console.log("Formatted Patent:", patent);
 
         if (cancelled) return;
