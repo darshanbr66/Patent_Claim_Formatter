@@ -203,7 +203,7 @@ export default function ViewerPage() {
   useEffect(() => {
     const handleHeaderDownload = () => {
       handleDownload();
-    };
+   };
 
     window.addEventListener(
       "viewer:download",
@@ -217,6 +217,24 @@ export default function ViewerPage() {
       );
     };
   }, [handleDownload]);
+
+  useEffect(() => {
+    const handleHeaderUploadAnother = () => {
+      handleUploadAnother();
+    };
+
+    window.addEventListener(
+      "viewer:upload-another",
+      handleHeaderUploadAnother
+    );
+
+    return () => {
+      window.removeEventListener(
+        "viewer:upload-another",
+        handleHeaderUploadAnother
+      );
+    };
+  }, []);
 
   useEffect(() => {
     window.dispatchEvent(
