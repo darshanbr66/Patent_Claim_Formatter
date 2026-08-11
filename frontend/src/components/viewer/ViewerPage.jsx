@@ -1,4 +1,10 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 
 import { useNavigate } from "react-router-dom";
 
@@ -18,12 +24,13 @@ import {
 } from "../../utils/fileStorage";
 
 export default function ViewerPage() {
- 
   const navigate = useNavigate();
   const [collapsed, setCollapsed] = useState(false);
   const topSectionRef = useRef(null);
-  const [topSectionHeight, setTopSectionHeight] = useState(0);
-  const [downloading, setDownloading] = useState(false);
+  const [topSectionHeight, setTopSectionHeight] =
+    useState(0);
+  const [downloading, setDownloading] =
+    useState(false);
 
   const {
     documentState,
@@ -52,7 +59,8 @@ export default function ViewerPage() {
       }
 
       try {
-        const parsedPatent = JSON.parse(cachedPatent);
+        const parsedPatent =
+          JSON.parse(cachedPatent);
 
         const restoredFile = await getFile();
 
@@ -79,12 +87,17 @@ export default function ViewerPage() {
     if (!topSectionRef.current) return;
 
     const updateHeight = () => {
-      setTopSectionHeight(topSectionRef.current.offsetHeight);
+      setTopSectionHeight(
+        topSectionRef.current.offsetHeight
+      );
     };
 
     updateHeight();
 
-    const observer = new ResizeObserver(updateHeight);
+    const observer = new ResizeObserver(
+      updateHeight
+    );
+
     observer.observe(topSectionRef.current);
 
     return () => observer.disconnect();
@@ -93,10 +106,6 @@ export default function ViewerPage() {
   const formattedPatent = useMemo(() => {
     return result ? formatPatent(result) : null;
   }, [result]);
-
-  if (!formattedPatent) {
-    return null;
-  }
 
   const handleUploadAnother = async () => {
     await clearFile();
@@ -108,77 +117,135 @@ export default function ViewerPage() {
     navigate("/", { replace: true });
   };
 
-  const handleDownload = async () => {
-  try {
-    setDownloading(true);
-    // XML file uploaded by the user
-    const xmlFile = documentState.file;
+  const handleDownload = useCallback(
+    async () => {
+      try {
+        setDownloading(true);
 
-    if (!xmlFile) {
-      alert("No XML file found.");
-      return;
-    }
+        // XML file uploaded by the user
+        const xmlFile = documentState.file;
 
-    const response = await downloadPatentPdf(xmlFile);
+        if (!xmlFile) {
+          alert("No XML file found.");
+          return;
+        }
 
-    const url = window.URL.createObjectURL(response.data);
+        const response =
+          await downloadPatentPdf(xmlFile);
 
-    const link = document.createElement("a");
+        const url =
+          window.URL.createObjectURL(
+            response.data
+          );
 
-    // Default filename
-    let filename = "Patent.pdf";
+        const link =
+          document.createElement("a");
 
-    // Read filename from Content-Disposition header
-    const disposition = response.headers["content-disposition"];
+        // Default filename
+        let filename = "Patent.pdf";
 
-    if (disposition) {
-      const match =
-        disposition.match(/filename\*?=(?:UTF-8'')?"?([^";]+)"?/);
+        // Read filename from Content-Disposition header
+        const disposition =
+          response.headers[
+            "content-disposition"
+          ];
 
-      if (match?.[1]) {
-        filename = decodeURIComponent(match[1]);
+        if (disposition) {
+          const match =
+            disposition.match(
+              /filename\*?=(?:UTF-8'')?"?([^";]+)"?/
+            );
+
+          if (match?.[1]) {
+            filename =
+              decodeURIComponent(match[1]);
+          }
+        }
+
+        link.href = url;
+        link.download = filename;
+
+        document.body.appendChild(link);
+        link.click();
+
+        document.body.removeChild(link);
+
+        window.URL.revokeObjectURL(url);
+      } catch (error) {
+        console.error(error);
+        alert("Failed to download PDF.");
+      } finally {
+        setDownloading(false);
       }
-    }
-
-    link.href = url;
-    link.download = filename;
-
-    document.body.appendChild(link);
-    link.click();
-
-    document.body.removeChild(link);
-
-    window.URL.revokeObjectURL(url);
-  } catch (error) {
-    console.error(error);
-    alert("Failed to download PDF.");
-  }finally {
-    setDownloading(false);
-  }
-};
+    },
+    [documentState.file]
+  );
 
   const handleZoomChange = (zoom) => {
     console.info("Selected zoom:", zoom);
   };
 
-  //  console.log("Backend result:", result);
-  //  console.log("Statistics:", formattedPatent.statistics);
-
   const handleDocumentScroll = (scrollTop) => {
     setCollapsed(scrollTop > 20);
   };
 
+  useEffect(() => {
+    window.dispatchEvent(
+      new CustomEvent(
+        "viewer:collapsed-change",
+        {
+          detail: collapsed,
+        }
+      )
+    );
+  }, [collapsed]);
+
+  useEffect(() => {
+    const handleHeaderDownload = () => {
+      handleDownload();
+    };
+
+    window.addEventListener(
+      "viewer:download",
+      handleHeaderDownload
+    );
+
+    return () => {
+      window.removeEventListener(
+        "viewer:download",
+        handleHeaderDownload
+      );
+    };
+  }, [handleDownload]);
+
+  useEffect(() => {
+    window.dispatchEvent(
+      new CustomEvent(
+        "viewer:download-state",
+        {
+          detail: downloading,
+        }
+      )
+    );
+  }, [downloading]);
+
+  /*
+   * All hooks must be called before this return.
+   */
+  if (!formattedPatent) {
+    return null;
+  }
+
   return (
     <section
-  className={`
-    flex
-    w-full
-    min-w-0
-    flex-col
-    ${collapsed ? "gap-0" : "gap-4"}
-  `}
->
-
+      className={`
+        flex
+        w-full
+        min-w-0
+        flex-col
+        ${collapsed ? "gap-0" : "gap-4"}
+      `}
+    >
       <div
         ref={topSectionRef}
         className={`
@@ -186,15 +253,23 @@ export default function ViewerPage() {
           transition-[max-height,opacity]
           duration-300
           ease-in-out
-          ${collapsed ? "max-h-0 opacity-0" : "max-h-[600px] opacity-100"}
+          ${
+            collapsed
+              ? "max-h-0 opacity-0"
+              : "max-h-[600px] opacity-100"
+          }
         `}
       >
         <ViewerToolbar
           document={formattedPatent.document}
           metadata={formattedPatent.metadata}
-          statistics={formattedPatent.statistics}
+          statistics={
+            formattedPatent.statistics
+          }
           claims={formattedPatent.claims}
-          onUploadAnother={handleUploadAnother}
+          onUploadAnother={
+            handleUploadAnother
+          }
           onDownload={handleDownload}
           zoom={100}
           onZoomChange={handleZoomChange}
@@ -206,7 +281,9 @@ export default function ViewerPage() {
         <div className="mt-4">
           <ProcessingSummary
             document={formattedPatent.document}
-            statistics={formattedPatent.statistics}
+            statistics={
+              formattedPatent.statistics
+            }
             claims={formattedPatent.claims}
             metadata={formattedPatent.metadata}
           />
@@ -217,7 +294,9 @@ export default function ViewerPage() {
         style={{
           height: collapsed
             ? "calc(100vh - 64px)"
-            : `calc(100vh - ${64 + topSectionHeight}px)`,
+            : `calc(100vh - ${
+                64 + topSectionHeight
+              }px`,
         }}
         className="
           mt-0
@@ -235,7 +314,6 @@ export default function ViewerPage() {
           onScroll={handleDocumentScroll}
         />
       </div>
-
     </section>
   );
 }
