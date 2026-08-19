@@ -33,8 +33,8 @@ export default function ClaimElementRenderer({
           font-normal
           leading-[1.5]
 
-          pl-[18px]
-          -indent-[10px]
+          pl-[60px]
+          -indent-[30px]
         "
       >
         {element.marker && (
